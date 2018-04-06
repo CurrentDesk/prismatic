@@ -1,5 +1,5 @@
 {
-  "name": "prismatic",
+  "name": "prismatize",
   "version": "0.1.0",
   "description": "A node library that converts your database into a GraphQL API like Prisma.",
   "author": "TJ Peden <tj.peden@currentdesk.com>",
@@ -15,12 +15,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CurrentDesk/prismatic.git"
+    "url": "git+https://github.com/CurrentDesk/prismatize.git"
   },
   "bugs": {
-    "url": "https://github.com/CurrentDesk/prismatic/issues"
+    "url": "https://github.com/CurrentDesk/prismatize/issues"
   },
-  "homepage": "https://github.com/CurrentDesk/prismatic#readme",
+  "homepage": "https://github.com/CurrentDesk/prismatize#readme",
   "private": false,
   "scripts": {
     "prepublish": "yarn clean && yarn build",
