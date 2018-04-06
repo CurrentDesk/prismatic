@@ -56,15 +56,26 @@ export function buildCreateInput(
       const gqlType = typeFromAST(schema, namedType)
 
       if (isInputType(gqlType)) {
+        const typeNode = list ?
+        new ListType()
+        .type(
+          new NonNullType()
+          .type(namedType)
+          .node()
+        )
+        .node()
+        :
+        namedType
+
         return fields.concat(
           new InputValueDefinition()
           .name(name)
           .type(required ?
             new NonNullType()
-            .type(namedType)
+            .type(typeNode)
             .node()
             :
-            namedType
+            typeNode
           )
           .node()
         )
