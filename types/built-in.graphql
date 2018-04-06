@@ -1,0 +1,20 @@
+"""
+Denotes unique identifiers
+"""
+directive @unique on FIELD_DEFINITION
+
+"""
+Denotes embedded entities
+"""
+directive @embedded on OBJECT | FIELD_DEFINITION
+
+"""
+Denotes default value
+"""
+directive @default(value: Any!) on FIELD_DEFINITION
+
+"""
+Support for mixed types
+"""
+scalar Any
+
