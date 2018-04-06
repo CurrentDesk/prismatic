@@ -23,7 +23,7 @@
   "homepage": "https://github.com/CurrentDesk/prismatize#readme",
   "private": false,
   "scripts": {
-    "prepublish": "yarn clean && yarn build",
+    "prepublishOnly": "yarn clean && yarn build",
     "build": "tsc -d -p .",
     "clean": "rm -rf dist"
   },
