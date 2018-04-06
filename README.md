@@ -1,19 +1,19 @@
-# Prismatic
+# Prismatize
 A node library that converts your database into a GraphQL API like Prisma.
 
 ## CLI Usage
 ```shell
-npx prismatic expand ./input.graphql [./output.graphql]
+npx prismatize expand ./input.graphql [./output.graphql]
 ```
 
 ## Import Examples
 
-### MonogDb with Resolver Mapping
+### MongoDb with Resolver Mapping
 ```typescript
 import {
   expandSchema,
   mapResolvers,
-} from 'prismatic'
+} from 'prismatize'
 
 // Using `graphql-import-loader`
 import types from './schema/index.graphql'
@@ -26,7 +26,7 @@ const resolvers = mapResolvers(typeDefs, {
 })
 ```
 
-### Severless Lambda with GraphQL-Yoga and MongoDb Resolver Mapping
+### Serverless Lambda with GraphQL-Yoga and MongoDb Resolver Mapping
 ```typescript
 import {
   APIGatewayEvent,
@@ -39,7 +39,7 @@ import { GraphQLServerLambda } from 'graphql-yoga'
 import {
   expandSchema,
   mapResolvers,
-} from 'prismatic'
+} from 'prismatize'
 
 // Using `graphql-import-loader`
 import types from './schema/index.graphql'
