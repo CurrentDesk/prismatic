@@ -26,7 +26,7 @@ export function buildCreateManyInput(
   }: ObjectTypeDefinitionNode,
   schema: GraphQLSchema
 ): InputObjectTypeDefinitionNode | undefined {
-  if (!hasDirective(directives, 'isEmbedded')) {
+  if (!hasDirective(directives, 'embedded')) {
     return new InputObjectTypeDefinition()
     .name(createManyInputName(name))
     .description(`\`${name}\` create many definition`)

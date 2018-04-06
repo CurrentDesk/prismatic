@@ -29,7 +29,7 @@ export function buildQueryType(
   }: ObjectTypeDefinitionNode,
   query: ObjectTypeDefinition,
 ) {
-  if (!hasDirective(directives, 'isEmbedded')) {
+  if (!hasDirective(directives, 'embedded')) {
     query.fields(fields => {
       const fieldName = camelize(name, false)
 

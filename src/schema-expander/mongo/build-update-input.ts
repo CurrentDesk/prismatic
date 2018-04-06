@@ -64,7 +64,7 @@ export function buildUpdateInput(
         )
       }
 
-      if (hasDirective(directives, 'isEmbedded')) {
+      if (hasDirective(directives, 'embedded')) {
         return fields.concat(
           new InputValueDefinition()
           .name(name)

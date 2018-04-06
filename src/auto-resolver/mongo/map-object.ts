@@ -23,7 +23,7 @@ export function mapObject(
     schema,
   }: MongoContext
 ) {
-  if (!hasDirective(directives, 'isEmbedded')) {
+  if (!hasDirective(directives, 'embedded')) {
     return fields.reduce((resolvers: ResolverMap, field: FieldDefinitionNode) => {
       const {
         name: {
@@ -49,7 +49,7 @@ export function mapObject(
           break
         }
         default: {
-          if (!hasDirective(field.directives, 'isEmbedded') && isObjectType(gqlType)) {
+          if (!hasDirective(field.directives, 'embedded') && isObjectType(gqlType)) {
             resolvers[name] = (object, args, context, meta) => {
               if (list) {
                 if (object[name] !== undefined) {

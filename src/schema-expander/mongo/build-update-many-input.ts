@@ -27,7 +27,7 @@ export function buildUpdateManyInput(
   }: ObjectTypeDefinitionNode,
   schema: GraphQLSchema
 ): InputObjectTypeDefinitionNode | undefined {
-  if (hasDirective(directives, 'isEmbedded')) {
+  if (hasDirective(directives, 'embedded')) {
     return new InputObjectTypeDefinition()
     .name(updateManyInputName(name))
     .description(`\`${name}\` update many definition`)

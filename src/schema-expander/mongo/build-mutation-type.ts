@@ -22,7 +22,7 @@ export function buildMutationType(
   }: ObjectTypeDefinitionNode,
   mutation: ObjectTypeDefinition,
 ) {
-  if (!hasDirective(directives, 'isEmbedded')) {
+  if (!hasDirective(directives, 'embedded')) {
     mutation.fields(fields =>
       fields.concat([
         new FieldDefinition()

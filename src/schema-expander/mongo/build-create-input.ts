@@ -70,7 +70,7 @@ export function buildCreateInput(
         )
       }
 
-      if (hasDirective(directives, 'isEmbedded')) {
+      if (hasDirective(directives, 'embedded')) {
         const namedTypeNode = new NamedType()
         .name(createInputName(namedType.name.value))
         .node()
