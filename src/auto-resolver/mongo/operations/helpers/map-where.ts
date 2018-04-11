@@ -1,7 +1,7 @@
 import { ObjectID } from 'mongodb'
 
-import { Where } from '..'
-import { MongoWhere } from '.'
+import { Where } from '../../..'
+import { MongoWhere } from '../../.'
 
 export function mapWhere(where: Where): MongoWhere {
   return Object.keys(where).reduce((result, key) => {
