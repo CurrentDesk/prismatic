@@ -1,19 +1,18 @@
-import { FieldDefinitionNode } from 'graphql/language'
+import {
+  FieldDefinitionNode,
+  ObjectTypeDefinitionNode,
+} from 'graphql/language'
 import { camelize } from 'inflected'
 
 import { unwrap } from '../../utilities'
 
 import { ResolverMap } from '..'
-import { MongoContext } from '.'
 
-import { insertOne } from './insert-one'
-import { updateOne } from './update-one'
-import { deleteOne } from './delete-one'
+import { insertOne } from './operations/insert-one'
+import { updateOne } from './operations/update-one'
+import { deleteOne } from './operations/delete-one'
 
-export function mapMutation({
-  db,
-  fields,
-}: MongoContext) {
+export function mapMutation({ fields }: ObjectTypeDefinitionNode) {
   return fields.reduce((
     resolvers: ResolverMap,
     {
@@ -30,15 +29,15 @@ export function mapMutation({
 
       switch (action) {
         case 'create': {
-          resolvers[name] = insertOne(db, collection)
+          resolvers[name] = insertOne(collection)
           break
         }
         case 'update': {
-          resolvers[name] = updateOne(db, collection)
+          resolvers[name] = updateOne(collection)
           break
         }
         case 'delete': {
-          resolvers[name] = deleteOne(db, collection)
+          resolvers[name] = deleteOne(collection)
           break
         }
         default: {

@@ -1,15 +1,14 @@
 import { GraphQLResolveInfo } from 'graphql/type'
-import { Db } from 'mongodb'
 
-import { condense } from './condense'
+import { condense } from './helpers/condense'
 
-export function insertOne(db: Promise<Db>, collectionName: string) {
+export function insertOne(collectionName: string) {
   return (
     object,
     {
       data
     },
-    context,
+    { db },
     meta: GraphQLResolveInfo
   ) => db.then(db => {
     const collection = db.collection(collectionName)

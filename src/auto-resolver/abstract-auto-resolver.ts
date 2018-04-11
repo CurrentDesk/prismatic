@@ -1,18 +1,15 @@
 import { GraphQLSchema } from 'graphql/type'
 
-import {
-  Options,
-  ResolverMap,
-} from '.'
+import { ResolverMap } from '.'
 
 export abstract class AutoResolver {
-  public resolvers: ResolverMap
+  protected resolvers: ResolverMap
 
-  public constructor(protected schema: GraphQLSchema, options: Options) {
+  public constructor(protected schema: GraphQLSchema) {
     this.resolvers = {}
-
-    this.connect(options)
   }
 
-  protected abstract connect(options: Options)
+  public getResolvers(): ResolverMap {
+    return this.resolvers
+  }
 }

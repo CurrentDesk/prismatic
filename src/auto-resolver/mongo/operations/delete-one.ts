@@ -1,13 +1,12 @@
 import { GraphQLResolveInfo } from 'graphql/type'
-import { Db } from 'mongodb'
 
-export function deleteOne(db: Promise<Db>, collectionName: string) {
+export function deleteOne(collectionName: string) {
   return (
     object,
     {
       where, // unique
     },
-    context,
+    { db },
     meta: GraphQLResolveInfo
   ) => db.then(db => {
     const collection = db.collection(collectionName)

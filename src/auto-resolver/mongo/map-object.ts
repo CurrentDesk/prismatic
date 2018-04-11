@@ -1,4 +1,8 @@
-import { FieldDefinitionNode } from 'graphql/language'
+import {
+  FieldDefinitionNode,
+  ObjectTypeDefinitionNode,
+} from 'graphql/language'
+import { GraphQLSchema } from 'graphql/type'
 import { typeFromAST } from 'graphql/utilities'
 
 import { camelize } from 'inflected'
@@ -10,27 +14,28 @@ import {
 import { isObjectType } from '../../type'
 
 import { ResolverMap } from '..'
-import { MongoContext } from '.'
 
-import { find } from './find'
-import { findOne } from './find-one'
+import { find } from './operations/find'
+import { findOne } from './operations/find-one'
 
 export function mapObject(
   {
-    db,
     fields,
     directives,
-    schema,
-  }: MongoContext
+  }: ObjectTypeDefinitionNode,
+  schema: GraphQLSchema
 ) {
   if (!hasDirective(directives, 'embedded')) {
-    return fields.reduce((resolvers: ResolverMap, field: FieldDefinitionNode) => {
-      const {
+    return fields.reduce((
+      resolvers: ResolverMap,
+      {
         name: {
-          value: name
+          value: name,
         },
         type,
-      } = field
+        directives: fieldDirectives,
+      }: FieldDefinitionNode,
+    ) => {
       const {
         list,
         namedType,
@@ -40,7 +45,7 @@ export function mapObject(
 
       switch (name) {
         case 'id': {
-          if (!hasDirective(field.directives, 'unique')) {
+          if (!hasDirective(fieldDirectives, 'unique')) {
             throw new Error('Field `id` must be marked `@unique`.')
           }
 
@@ -49,19 +54,19 @@ export function mapObject(
           break
         }
         default: {
-          if (!hasDirective(field.directives, 'embedded') && isObjectType(gqlType)) {
+          if (!hasDirective(fieldDirectives, 'embedded') && isObjectType(gqlType)) {
             resolvers[name] = (object, args, context, meta) => {
               if (list) {
                 if (object[name] !== undefined) {
                   Object.assign(args, { where: { id_in: object[name] } })
-                  return find(db, collection)(null, args, context, meta)
+                  return find(collection)(null, args, context, meta)
                 } else {
                   return []
                 }
               }
 
               Object.assign(args, { where: { id: object[name] } })
-              return findOne(db, collection)(null, args, context, meta)
+              return findOne(collection)(null, args, context, meta)
             }
           }
         }

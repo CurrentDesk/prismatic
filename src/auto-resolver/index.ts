@@ -5,10 +5,7 @@ import {
 import { buildSchema } from 'graphql/utilities'
 
 import { AutoResolver } from './abstract-auto-resolver'
-import {
-  MongoOptions,
-  MongoAutoResolver,
-} from './mongo'
+import { MongoAutoResolver } from './mongo'
 
 export interface Where {
   AND?: Where[]
@@ -27,15 +24,15 @@ export interface Arguments {
 }
 
 export type ResolverMap = { [key: string]: any }
-export type Options = MongoOptions
+export type ResolverType = 'mongo'
 
-export function mapResolvers(typeDefs: string, options: Options) {
+export function mapResolvers(typeDefs: string, type: ResolverType) {
   const schema = buildSchema(typeDefs)
   let mapper: AutoResolver
 
-  switch (options.type) {
+  switch (type) {
     case 'mongo': {
-      mapper = new MongoAutoResolver(schema, options)
+      mapper = new MongoAutoResolver(schema)
       break
     }
     default: {
@@ -47,5 +44,5 @@ export function mapResolvers(typeDefs: string, options: Options) {
 
   visit(ast, mapper)
 
-  return mapper.resolvers
+  return mapper.getResolvers()
 }

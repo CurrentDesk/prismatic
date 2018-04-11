@@ -1,19 +1,18 @@
 import { GraphQLResolveInfo } from 'graphql/type'
-import { Db } from 'mongodb'
 
-import { Arguments } from '..'
-import { MongoWhere } from '.'
+import { Arguments } from '../..'
+import { MongoWhere } from '../.'
 
-import { mapWhere } from './map-where'
-import { getProjection } from './get-projection'
+import { mapWhere } from './helpers/map-where'
+import { getProjection } from './helpers/get-projection'
 
-export function findOne(db: Promise<Db>, collectionName: string) {
+export function findOne(collectionName: string) {
   return (
     object,
     {
       where
     }: Arguments,
-    context,
+    { db },
     meta: GraphQLResolveInfo,
   ) => db.then(db => {
     const condition: MongoWhere = where ? mapWhere(where) : {}

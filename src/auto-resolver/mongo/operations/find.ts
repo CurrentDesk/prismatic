@@ -1,14 +1,13 @@
 import { GraphQLResolveInfo } from 'graphql/type'
-import { Db } from 'mongodb'
 
-import { Arguments } from '..'
-import { MongoWhere } from '.'
+import { Arguments } from '../..'
+import { MongoWhere } from '../.'
 
-import { mapWhere } from './map-where'
-import { mapOrderBy } from './map-order-by'
-import { getProjection } from './get-projection'
+import { mapWhere } from './helpers/map-where'
+import { mapOrderBy } from './helpers/map-order-by'
+import { getProjection } from './helpers/get-projection'
 
-export function find(db: Promise<Db>, collectionName: string) {
+export function find(collectionName: string) {
   return (
     object,
     {
@@ -18,7 +17,7 @@ export function find(db: Promise<Db>, collectionName: string) {
       first,
       last,
     }: Arguments,
-    context,
+    { db },
     meta: GraphQLResolveInfo,
   ) => db.then(db => {
     const condition: MongoWhere = where ? mapWhere(where) : {}

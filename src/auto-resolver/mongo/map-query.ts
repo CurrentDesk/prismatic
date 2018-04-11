@@ -1,32 +1,33 @@
-import { FieldDefinitionNode } from 'graphql/language'
+import {
+  FieldDefinitionNode,
+  ObjectTypeDefinitionNode,
+} from 'graphql/language'
 import { camelize } from 'inflected'
 
 import { unwrap } from '../../utilities'
 
 import { ResolverMap } from '..'
-import { MongoContext } from '.'
 
-import { find } from './find'
-import { findOne } from './find-one'
+import { find } from './operations/find'
+import { findOne } from './operations/find-one'
 
-export function mapQuery(
-  {
-    db,
-    fields,
-  }: MongoContext
-) {
-  return fields.reduce((resolvers: ResolverMap, field: FieldDefinitionNode) => {
-    const {
-      type,
-      name: { value: name }
-    } = field
+export function mapQuery({ fields }: ObjectTypeDefinitionNode) {
+  return fields.reduce((
+    resolvers: ResolverMap,
+    {
+      name: {
+        value: name,
+      },
+      type
+    }: FieldDefinitionNode,
+  ) => {
     const {
       namedType,
       list,
     } = unwrap(type)
     const collection = camelize(namedType.name.value, false)
 
-    resolvers[name] = list ? find(db, collection) : findOne(db, collection)
+    resolvers[name] = list ? find(collection) : findOne(collection)
 
     return resolvers
   }, {})

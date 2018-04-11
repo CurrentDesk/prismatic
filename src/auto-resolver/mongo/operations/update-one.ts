@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql/type'
-import { Db } from 'mongodb'
 
-import { mapWhere } from './map-where'
+import { mapWhere } from './helpers/map-where'
 
 function isObject(value) {
   return value && typeof value === 'object' && value.constructor === Object
@@ -20,7 +19,7 @@ function mapOperators(data: { [key: string]: any }): { [key: string]: any } {
           throw new Error('Too many operators! (╯°□°）╯︵ ┻━┻')
         }
 
-        switch(operatorKey) {
+        switch (operatorKey) {
           case 'addToSet':
           case 'push': {
             value = {
@@ -50,18 +49,18 @@ function mapOperators(data: { [key: string]: any }): { [key: string]: any } {
   }, {})
 }
 
-export function updateOne(db: Promise<Db>, collectionName: string) {
+export function updateOne(collectionName: string) {
   return (
     object,
     {
       data,
       where,
     },
-    context,
+    { db },
     meta: GraphQLResolveInfo
   ) => db.then(db => {
     const collection = db.collection(collectionName)
-    const condition = mapWhere(where);
+    const condition = mapWhere(where)
 
     data['updatedAt'] = new Date(Date.now())
 
