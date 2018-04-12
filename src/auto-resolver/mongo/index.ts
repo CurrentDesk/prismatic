@@ -21,7 +21,7 @@ export interface MongoContext {
 
 export class MongoAutoResolver extends AutoResolver {
   public ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
-    switch (name) {
+    switch (node.name.value) {
       case 'Query': {
         this.resolvers['Query'] = mapQuery(node)
         break
@@ -34,7 +34,7 @@ export class MongoAutoResolver extends AutoResolver {
         const resolvers = mapObject(node, this.schema)
 
         if (resolvers !== undefined) {
-          this.resolvers[name] = resolvers
+          this.resolvers[node.name.value] = resolvers
         }
       }
     }
