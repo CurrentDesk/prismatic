@@ -1,6 +1,9 @@
 #!/usr/bin/env node
+
+process.title = 'prismatize'
+
 import { writeFile } from 'fs'
-import { normalize } from 'path'
+import { resolve } from 'path'
 
 import * as yargs from 'yargs'
 import { importSchema } from 'graphql-import'
@@ -16,11 +19,11 @@ yargs
   'Expand type definitions',
   {},
   args => {
-    const basicTypes = importSchema(normalize(args.input))
+    const basicTypes = importSchema(args.input)
     const typeDefs = expandSchema(basicTypes, 'mongo')
 
     if (args.output) {
-      writeFile(normalize(args.output), typeDefs, 'utf8', error => {
+      writeFile(resolve(args.output), typeDefs, 'utf8', error => {
         if (error) { console.log(error) }
       })
     } else {

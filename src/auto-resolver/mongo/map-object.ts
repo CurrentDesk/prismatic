@@ -26,7 +26,7 @@ export function mapObject(
   schema: GraphQLSchema
 ) {
   if (!hasDirective(directives, 'embedded')) {
-    return fields.reduce((
+    return fields && fields.reduce((
       resolvers: ResolverMap,
       {
         name: {

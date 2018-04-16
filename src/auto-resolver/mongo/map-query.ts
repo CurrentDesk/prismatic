@@ -12,7 +12,7 @@ import { find } from './operations/find'
 import { findOne } from './operations/find-one'
 
 export function mapQuery({ fields }: ObjectTypeDefinitionNode) {
-  return fields.reduce((
+  return fields && fields.reduce((
     resolvers: ResolverMap,
     {
       name: {

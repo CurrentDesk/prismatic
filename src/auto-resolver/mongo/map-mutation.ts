@@ -13,7 +13,7 @@ import { updateOne } from './operations/update-one'
 import { deleteOne } from './operations/delete-one'
 
 export function mapMutation({ fields }: ObjectTypeDefinitionNode) {
-  return fields.reduce((
+  return fields && fields.reduce((
     resolvers: ResolverMap,
     {
       name: { value: name },

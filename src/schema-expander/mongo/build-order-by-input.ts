@@ -30,11 +30,11 @@ export function buildOrderByInput(
   .name(orderByInputName(name))
   .description(`\`${name}\` order by options definition`)
   .values(
-    fields
+    (fields || [])
     .filter(field => {
-      const type = getNamedType(typeFromAST(schema, field.type))
+      const type = getNamedType(typeFromAST(schema, field.type as any) as any) // I don't even get it...
 
-      return isInputType(type)
+      return type && isInputType(type)
     })
     .reduce((values, field) => {
       const name = field.name.value

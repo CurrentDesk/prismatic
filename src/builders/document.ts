@@ -10,7 +10,7 @@ import {
 
 export class Document extends Builder<DocumentNode> {
   public definitions(mutator: Mutator<DefinitionNode>): this {
-    this._node.definitions = mutator(this._node.definitions)
+    this._node.definitions = mutator((this._node.definitions) as DefinitionNode[])
 
     return this
   }

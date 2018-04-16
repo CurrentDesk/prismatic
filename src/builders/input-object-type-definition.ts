@@ -8,7 +8,7 @@ import { Definition } from './abstract-definition'
 
 export class InputObjectTypeDefinition extends Definition<InputObjectTypeDefinitionNode> {
   public fields(mutator: Mutator<InputValueDefinitionNode>): this {
-    this._node.fields = mutator(this._node.fields || [])
+    this._node.fields = mutator((this._node.fields || []) as InputValueDefinitionNode[])
 
     return this
   }

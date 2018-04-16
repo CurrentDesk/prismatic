@@ -21,22 +21,17 @@ export interface MongoContext {
 
 export class MongoAutoResolver extends AutoResolver {
   public ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
-    switch (node.name.value) {
-      case 'Query': {
-        this.resolvers['Query'] = mapQuery(node)
-        break
+    const map = () => {
+      switch (node.name.value) {
+        case 'Query': return mapQuery(node)
+        case 'Mutation': return mapMutation(node)
+        default: return mapObject(node, this.schema)
       }
-      case 'Mutation': {
-        this.resolvers['Mutation'] = mapMutation(node)
-        break
-      }
-      default: {
-        const resolvers = mapObject(node, this.schema)
+    }
+    const resolvers = map()
 
-        if (resolvers !== undefined) {
-          this.resolvers[node.name.value] = resolvers
-        }
-      }
+    if (resolvers !== undefined) {
+      this.resolvers[node.name.value] = resolvers
     }
   }
 }

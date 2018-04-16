@@ -40,7 +40,7 @@
     "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "@types/graphql": "^0.12.7",
+    "@types/graphql": "^0.13.0",
     "@types/inflected": "^1.1.29",
     "@types/jest": "^22.2.3",
     "@types/mongodb": "^3.0.5",
@@ -50,7 +50,7 @@
     "ts-jest": "^22.4.3",
     "tslint": "^5.9.1",
     "tslint-config-standard": "^7.0.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.8.1"
   },
   "jest": {
     "testEnvironment": "node",

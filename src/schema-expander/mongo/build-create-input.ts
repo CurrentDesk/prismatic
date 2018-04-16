@@ -37,7 +37,7 @@ export function buildCreateInput(
   .name(createInputName(name))
   .description(`\`${name}\` create definition`)
   .fields(_ =>
-    fields.reduce((
+    (fields || []).reduce((
       fields,
       {
         name: {
@@ -55,7 +55,7 @@ export function buildCreateInput(
       const { required, list, namedType } = unwrap(type)
       const gqlType = typeFromAST(schema, namedType)
 
-      if (isInputType(gqlType)) {
+      if (gqlType && isInputType(gqlType)) {
         const typeNode = list ?
         new ListType()
         .type(
