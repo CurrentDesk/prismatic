@@ -3,7 +3,7 @@ A node library that converts your database into a GraphQL API like Prisma.
 
 ## CLI Usage
 ```shell
-npx prismatize expand ./input.graphql [./output.graphql]
+npx @currentdesk/prismatize expand ./input.graphql [./output.graphql]
 ```
 
 ## Import Examples
@@ -13,7 +13,7 @@ npx prismatize expand ./input.graphql [./output.graphql]
 import {
   expandSchema,
   mapResolvers,
-} from 'prismatize'
+} from '@currentdesk/prismatize'
 
 // Using `graphql-import-loader`
 import types from './schema/index.graphql'
@@ -39,7 +39,7 @@ import { GraphQLServerLambda } from 'graphql-yoga'
 import {
   expandSchema,
   mapResolvers,
-} from 'prismatize'
+} from '@currentdesk/prismatize'
 
 // Using `graphql-import-loader`
 import types from './schema/index.graphql'
