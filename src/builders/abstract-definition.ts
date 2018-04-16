@@ -15,7 +15,7 @@ import { StringValue } from './string-value'
 export interface DefinitionNode extends Node {
   name: NameNode
   description?: StringValueNode
-  directives?: DirectiveNode[]
+  directives?: ReadonlyArray<DirectiveNode>
 }
 
 export abstract class Definition<T extends DefinitionNode> extends Builder<T> {
@@ -37,7 +37,7 @@ export abstract class Definition<T extends DefinitionNode> extends Builder<T> {
   }
 
   public directives(mutator: Mutator<DirectiveNode>): this {
-    this._node.directives = mutator(this._node.directives || [])
+    this._node.directives = mutator((this._node.directives || []) as DirectiveNode[])
 
     return this
   }

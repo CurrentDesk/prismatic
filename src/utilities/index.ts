@@ -49,6 +49,6 @@ export function unwrap(type: TypeNode): Unwrapped {
   }
 }
 
-export function hasDirective(directives: DirectiveNode[] | undefined, name: string): boolean {
+export function hasDirective(directives: ReadonlyArray<DirectiveNode> | undefined, name: string): boolean {
   return !!directives && directives.some(({ name: { value } }) => value === name)
 }

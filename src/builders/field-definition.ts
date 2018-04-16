@@ -15,7 +15,7 @@ export class FieldDefinition extends Definition<FieldDefinitionNode> {
   }
 
   public arguments(mutator: Mutator<InputValueDefinitionNode>): this {
-    this._node.arguments = mutator(this._node.arguments || [])
+    this._node.arguments = mutator((this._node.arguments || []) as InputValueDefinitionNode[])
 
     return this
   }

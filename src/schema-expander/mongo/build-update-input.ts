@@ -37,7 +37,7 @@ export function buildUpdateInput(
   .name(updateInputName(name))
   .description(`\`${name}\` update definition`)
   .fields(_ =>
-    fields.reduce((
+    (fields || []).reduce((
       fields,
       {
         name: {
@@ -55,7 +55,7 @@ export function buildUpdateInput(
       const { namedType, list } = unwrap(type)
       const gqlType = typeFromAST(schema, namedType)
 
-      if (isInputType(gqlType)) {
+      if (gqlType && isInputType(gqlType)) {
         return fields.concat(
           new InputValueDefinition()
           .name(name)

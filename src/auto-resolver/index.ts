@@ -1,6 +1,9 @@
 import {
   parse,
   visit,
+  Visitor,
+  ASTNode,
+  ASTKindToNode,
 } from 'graphql/language'
 import { buildSchema } from 'graphql/utilities'
 
@@ -42,7 +45,7 @@ export function mapResolvers(typeDefs: string, type: ResolverType) {
 
   const ast = parse(typeDefs)
 
-  visit(ast, mapper)
+  visit(ast, mapper as Visitor<ASTKindToNode, ASTNode>)
 
   return mapper.getResolvers()
 }

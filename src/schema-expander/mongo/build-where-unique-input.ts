@@ -23,7 +23,7 @@ export function buildWhereUniqueInput(
   }: ObjectTypeDefinitionNode,
   schema: GraphQLSchema
 ): InputObjectTypeDefinitionNode | undefined {
-  const fieldDefinitions = fields
+  const fieldDefinitions = (fields || [])
   .filter(({ directives }: FieldDefinitionNode) => hasDirective(directives, 'unique'))
   .map((field: FieldDefinitionNode) => InputValueDefinition.fromFieldDefinition(field).node())
 

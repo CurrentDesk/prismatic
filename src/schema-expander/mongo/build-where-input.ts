@@ -86,7 +86,7 @@ export function buildWhereInput(
       .type(whereInputLogicalType)
       .node()
     ].concat(
-      fields.reduce((fields, field: FieldDefinitionNode) => {
+      (fields || []).reduce((fields, field: FieldDefinitionNode) => {
         const {
           name: { value: name },
           type,
