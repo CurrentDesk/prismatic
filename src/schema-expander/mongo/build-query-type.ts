@@ -37,30 +37,14 @@ export function buildQueryType(
         new FieldDefinition()
         .name(pluralize(fieldName))
         .description(`Returns a list of \`${name}\`s that match the filter`)
-        .arguments(_ => buildWhereArguments(name))
-        .type(
-          new NonNullType()
-          .type(
-            new ListType()
-            .type(
-              new NamedType()
-              .name(name)
-              .node()
-            )
-            .node()
-          )
-          .node()
-        )
+        .arguments(() => buildWhereArguments(name))
+        .type(NonNullType.node(ListType.node(NamedType.node(name))))
         .node(),
         new FieldDefinition()
         .name(singularize(fieldName))
         .description(`Returns a single \`${name}\` record by ID`)
-        .arguments(_ => buildWhereUniqueArguments(name))
-        .type(
-          new NamedType()
-          .name(name)
-          .node()
-        )
+        .arguments(() => buildWhereUniqueArguments(name))
+        .type(NamedType.node(name))
         .node(),
       ])
     })

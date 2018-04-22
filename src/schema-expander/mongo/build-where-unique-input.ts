@@ -31,7 +31,7 @@ export function buildWhereUniqueInput(
     return new InputObjectTypeDefinition()
     .name(whereUniqueInputName(name))
     .description(`\`${name}\` unique filter definition`)
-    .fields(_ => fieldDefinitions)
+    .fields(() => fieldDefinitions)
     .node()
   }
 }

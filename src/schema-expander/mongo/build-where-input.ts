@@ -110,15 +110,7 @@ export function buildWhereInput(
             listInputOperators.map(operator =>
               new InputValueDefinition()
               .name(opName(operator))
-              .type(
-                new ListType()
-                .type(
-                  new NonNullType()
-                  .type(namedType)
-                  .node()
-                )
-                .node()
-              )
+              .type(ListType.node(NonNullType.node(namedType)))
               .node()
             )
           )
@@ -139,15 +131,7 @@ export function buildWhereInput(
             listInputOperators.map(operator =>
               new InputValueDefinition()
               .name(opName(operator))
-              .type(
-                new ListType()
-                .type(
-                  new NonNullType()
-                  .type(namedType)
-                  .node()
-                )
-                .node()
-              )
+              .type(ListType.node(NonNullType.node(namedType)))
               .node()
             )
           )
@@ -161,11 +145,7 @@ export function buildWhereInput(
               listOperators.map(operator =>
                 new InputValueDefinition()
                 .name(opName(operator))
-                .type(
-                  new NamedType()
-                  .name(objectTypeName)
-                  .node()
-                )
+                .type(NamedType.node(objectTypeName))
                 .node()
               )
             )
@@ -174,11 +154,7 @@ export function buildWhereInput(
           return fields.concat(
             new InputValueDefinition()
             .name(name)
-            .type(
-              new NamedType()
-              .name(objectTypeName)
-              .node()
-            )
+            .type(NamedType.node(objectTypeName))
             .node()
           )
         }

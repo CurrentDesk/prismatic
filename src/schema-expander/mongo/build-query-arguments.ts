@@ -14,43 +14,23 @@ export function buildWhereArguments(name: string): InputValueDefinitionNode[] {
   return [
     new InputValueDefinition()
     .name('where')
-    .type(
-      new NamedType()
-      .name(whereInputName(name))
-      .node()
-    )
+    .type(NamedType.node(whereInputName(name)))
     .node(),
     new InputValueDefinition()
     .name('orderBy')
-    .type(
-      new NamedType()
-      .name(orderByInputName(name))
-      .node()
-    )
+    .type(NamedType.node(orderByInputName(name)))
     .node(),
     new InputValueDefinition()
     .name('skip')
-    .type(
-      new NamedType()
-      .name('Int')
-      .node()
-    )
+    .type(NamedType.node('Int'))
     .node(),
     new InputValueDefinition()
     .name('first')
-    .type(
-      new NamedType()
-      .name('Int')
-      .node()
-    )
+    .type(NamedType.node('Int'))
     .node(),
     new InputValueDefinition()
     .name('last')
-    .type(
-      new NamedType()
-      .name('Int')
-      .node()
-    )
+    .type(NamedType.node('Int'))
     .node(),
   ]
 }
@@ -59,15 +39,7 @@ export function buildWhereUniqueArguments(name: string): InputValueDefinitionNod
   return [
     new InputValueDefinition()
     .name('where')
-    .type(
-      new NonNullType()
-      .type(
-        new NamedType()
-        .name(whereUniqueInputName(name))
-        .node()
-      )
-      .node()
-    )
+    .type(NonNullType.node(NamedType.node(whereUniqueInputName(name))))
     .node(),
   ]
 }

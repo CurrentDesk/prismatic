@@ -36,7 +36,7 @@ export function buildUpdateInput(
   return new InputObjectTypeDefinition()
   .name(updateInputName(name))
   .description(`\`${name}\` update definition`)
-  .fields(_ =>
+  .fields(() =>
     (fields || []).reduce((
       fields,
       {
@@ -68,15 +68,7 @@ export function buildUpdateInput(
         return fields.concat(
           new InputValueDefinition()
           .name(name)
-          .type(
-            new NamedType()
-            .name(list ?
-              updateManyInputName(namedType.name.value)
-              :
-              updateInputName(namedType.name.value)
-            )
-            .node()
-          )
+          .type(NamedType.node(list ? updateManyInputName(namedType.name.value) : updateInputName(namedType.name.value)))
           .node()
         )
       }

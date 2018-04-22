@@ -34,51 +34,19 @@ export function buildUpdateManyInput(
     .fields(() => [
       new InputValueDefinition()
       .name('addToSet')
-      .type(
-        new ListType()
-        .type(
-          new NonNullType()
-          .type(
-            new NamedType()
-            .name(createInputName(name))
-            .node()
-          )
-          .node()
-        )
-        .node()
-      )
+      .type(ListType.node(NonNullType.node(NamedType.node(createInputName(name)))))
       .node(),
       new InputValueDefinition()
       .name('pop')
-      .type(
-        new NamedType()
-        .name('Int')
-        .node()
-      )
+      .type(NamedType.node('Int'))
       .node(),
       new InputValueDefinition()
       .name('pull')
-      .type(
-        new NamedType()
-        .name(whereInputName(name))
-        .node()
-      )
+      .type(NamedType.node(whereInputName(name)))
       .node(),
       new InputValueDefinition()
       .name('push')
-      .type(
-        new ListType()
-        .type(
-          new NonNullType()
-          .type(
-            new NamedType()
-            .name(createInputName(name))
-            .node()
-          )
-          .node()
-        )
-        .node()
-      )
+      .type(ListType.node(NonNullType.node(NamedType.node(createInputName(name)))))
       .node()
     ])
     .node()

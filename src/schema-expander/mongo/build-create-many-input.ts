@@ -14,6 +14,7 @@ import {
 import { hasDirective } from '../../utilities'
 
 import { createInputName } from './build-create-input'
+import { whereUniqueInputName } from './build-where-unique-input'
 
 export const createManyInputName = (name: string) => `${name}CreateManyInput`
 
@@ -30,26 +31,16 @@ export function buildCreateManyInput(
     return new InputObjectTypeDefinition()
     .name(createManyInputName(name))
     .description(`\`${name}\` create many definition`)
-    .fields(() =>
-      [
-        new InputValueDefinition()
-        .name('create')
-        .type(
-          new ListType()
-          .type(
-            new NonNullType()
-            .type(
-              new NamedType()
-              .name(createInputName(name))
-              .node()
-            )
-            .node()
-          )
-          .node()
-        )
-        .node()
-      ]
-    )
+    .fields(() => [
+      new InputValueDefinition()
+      .name('create')
+      .type(ListType.node(NonNullType.node(NamedType.node(createInputName(name)))))
+      .node(),
+      new InputValueDefinition()
+      .name('connect')
+      .type(ListType.node(NonNullType.node(NamedType.node(whereUniqueInputName(name)))))
+      .node(),
+    ])
     .node()
   }
 }

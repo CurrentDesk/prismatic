@@ -6,6 +6,7 @@ import {
 } from 'graphql/language'
 import {
   isInputType,
+  isObjectType,
   GraphQLSchema,
 } from 'graphql/type'
 import { typeFromAST } from 'graphql/utilities'
@@ -21,6 +22,8 @@ import {
   unwrap,
   hasDirective,
 } from '../../utilities'
+
+import { createManyInputName } from './build-create-many-input'
 
 export const createInputName = (name: string) => `${name}CreateInput`
 
@@ -55,59 +58,42 @@ export function buildCreateInput(
       const { required, list, namedType } = unwrap(type)
       const gqlType = typeFromAST(schema, namedType)
 
+      // Non-objects
       if (gqlType && isInputType(gqlType)) {
         const typeNode = list ?
-        new ListType()
-        .type(
-          new NonNullType()
-          .type(namedType)
-          .node()
-        )
-        .node()
+        ListType.node(NonNullType.node(namedType))
         :
         namedType
 
         return fields.concat(
           new InputValueDefinition()
           .name(name)
-          .type(required ?
-            new NonNullType()
-            .type(typeNode)
-            .node()
-            :
-            typeNode
-          )
+          .type(required && !hasDirective(directives, 'default') ? NonNullType.node(typeNode) : typeNode)
           .node()
         )
       }
 
-      if (hasDirective(directives, 'embedded')) {
-        const namedTypeNode = new NamedType()
-        .name(createInputName(namedType.name.value))
-        .node()
-        const typeNode = list ?
-        new ListType()
-        .type(
-          new NonNullType()
-          .type(namedTypeNode)
-          .node()
-        )
-        .node()
-        :
-        namedTypeNode
+      if (gqlType && isObjectType(gqlType)) {
+        if (hasDirective(directives, 'embedded')) {
+          const namedTypeNode = NamedType.node(createInputName(namedType.name.value))
+          const typeNode = list ? ListType.node(NonNullType.node(namedTypeNode)) : namedTypeNode
 
-        return fields.concat(
-          new InputValueDefinition()
-          .name(name)
-          .type(required ?
-            new NonNullType()
-            .type(typeNode)
+          return fields.concat(
+            new InputValueDefinition()
+            .name(name)
+            .type(required ? NonNullType.node(typeNode) : typeNode)
             .node()
-            :
-            typeNode
           )
-          .node()
-        )
+        } else {
+          const namedTypeNode = NamedType.node((list ? createManyInputName : createInputName)(namedType.name.value))
+
+          return fields.concat(
+            new InputValueDefinition()
+            .name(name)
+            .type(namedTypeNode)
+            .node()
+          )
+        }
       }
 
       return fields
