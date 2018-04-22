@@ -23,7 +23,7 @@ export function expandSchema(typeDefs: string, dialect: Dialect): string {
     }
   }
 
-  const ast = parse(typeDefs)
+  const ast = parse(typeDefs, { noLocation: true })
   const expandedAST = visit(ast, expander)
 
   return print(expandedAST)

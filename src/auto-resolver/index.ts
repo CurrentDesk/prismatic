@@ -43,7 +43,7 @@ export function mapResolvers(typeDefs: string, type: ResolverType) {
     }
   }
 
-  const ast = parse(typeDefs)
+  const ast = parse(typeDefs, { noLocation: true })
 
   visit(ast, mapper as Visitor<ASTKindToNode, ASTNode>)
 
