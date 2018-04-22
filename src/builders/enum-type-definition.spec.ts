@@ -39,7 +39,7 @@ describe('EnumTypeDefinition', () => {
     }
     const enumTypeDefintion: EnumTypeDefinitionNode = new EnumTypeDefinition()
     .name('Foo')
-    .values([
+    .values(() => [
       new EnumValueDefinition()
       .name('Bar')
       .node()

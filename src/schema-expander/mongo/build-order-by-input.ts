@@ -29,7 +29,7 @@ export function buildOrderByInput(
   return new EnumTypeDefinition()
   .name(orderByInputName(name))
   .description(`\`${name}\` order by options definition`)
-  .values(
+  .values(() =>
     (fields || [])
     .filter(field => {
       const type = getNamedType(typeFromAST(schema, field.type as any) as any) // I don't even get it...
