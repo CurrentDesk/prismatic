@@ -19,34 +19,29 @@ export function isWrappingType(type: TypeNode): type is WrappingTypeNode {
 }
 
 export function getNamedType(type: TypeNode): NamedTypeNode {
-  let unwrapped = type
-
-  while (isWrappingType(unwrapped)) {
-    unwrapped = unwrapped.type
+  if (isWrappingType(type)) {
+    return getNamedType(type.type)
   }
 
-  return unwrapped
+  return type
 }
 
-export function unwrap(type: TypeNode): Unwrapped {
-  const required = type.kind === 'NonNullType'
-
-  let namedType = type
-  let list = false
-
-  while (isWrappingType(namedType)) {
-    if (namedType.kind === 'ListType') {
-      list = true
-    }
-
-    namedType = namedType.type
+export function unwrap(type: TypeNode, info: Unwrapped = {} as Unwrapped): Unwrapped {
+  if (info.required === undefined) {
+    info.required = type.kind === 'NonNullType'
   }
 
-  return {
-    list,
-    required,
-    namedType,
+  if (type.kind === 'ListType') {
+    info.list = true
   }
+
+  if (isWrappingType(type)) {
+    return unwrap(type.type, info)
+  }
+
+  info.namedType = type
+
+  return info
 }
 
 export function hasDirective(directives: ReadonlyArray<DirectiveNode> | undefined, name: string): boolean {
