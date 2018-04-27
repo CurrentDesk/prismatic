@@ -8,16 +8,16 @@ import { getProjection } from './helpers/get-projection'
 
 export function findOne(collectionName: string) {
   return (
-    object,
+    source,
     {
       where
     }: Arguments,
     { db },
-    meta: GraphQLResolveInfo,
+    info: GraphQLResolveInfo,
   ) => db.then(db => {
     const condition: MongoWhere = where ? mapWhere(where) : {}
     const collection = db.collection(collectionName)
-    const projection = getProjection(meta)
+    const projection = getProjection(info)
 
     return collection.findOne(condition, { projection })
     .catch(console.log)

@@ -51,13 +51,13 @@ function mapOperators(data: { [key: string]: any }): { [key: string]: any } {
 
 export function updateOne(collectionName: string) {
   return (
-    object,
+    source,
     {
       data,
       where,
     },
     { db },
-    meta: GraphQLResolveInfo
+    info: GraphQLResolveInfo
   ) => db.then(db => {
     const collection = db.collection(collectionName)
     const condition = mapWhere(where)

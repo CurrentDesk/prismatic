@@ -2,12 +2,12 @@ import { GraphQLResolveInfo } from 'graphql/type'
 
 export function deleteOne(collectionName: string) {
   return (
-    object,
+    source,
     {
       where, // unique
     },
     { db },
-    meta: GraphQLResolveInfo
+    info: GraphQLResolveInfo
   ) => db.then(db => {
     const collection = db.collection(collectionName)
 

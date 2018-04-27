@@ -9,7 +9,7 @@ import { getProjection } from './helpers/get-projection'
 
 export function find(collectionName: string) {
   return (
-    object,
+    source,
     {
       where,
       orderBy,
@@ -18,12 +18,12 @@ export function find(collectionName: string) {
       last,
     }: Arguments,
     { db },
-    meta: GraphQLResolveInfo,
+    info: GraphQLResolveInfo,
   ) => db.then(db => {
     const condition: MongoWhere = where ? mapWhere(where) : {}
     const collection = db.collection(collectionName)
     const count = last ? collection.count({}) : Promise.resolve(0)
-    const projection = getProjection(meta)
+    const projection = getProjection(info)
 
     return count.then(count => {
       let query = collection.find(condition).project(projection)
