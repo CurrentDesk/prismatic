@@ -4,7 +4,12 @@ import {
   InputValueDefinitionNode,
   InputObjectTypeDefinitionNode,
 } from 'graphql/language'
-import { GraphQLSchema } from 'graphql/type'
+import {
+  isEnumType,
+  isScalarType,
+  isObjectType,
+  GraphQLSchema,
+} from 'graphql/type'
 import { typeFromAST } from 'graphql/utilities'
 
 import {
@@ -15,11 +20,6 @@ import {
   InputObjectTypeDefinition,
 } from '../../builders'
 import { unwrap } from '../../utilities'
-import {
-  isEnumType,
-  isScalarType,
-  isObjectType,
-} from '../../type'
 
 export const whereInputName = (name: string) => `${name}WhereInput`
 
@@ -95,7 +95,7 @@ export function buildWhereInput(
         const gqlType = typeFromAST(schema, namedType)
         const opName = (operator: string) => `${name}_${operator}`
 
-        if (isScalarType(gqlType)) {
+        if (gqlType && isScalarType(gqlType)) {
           return fields.concat(
             new InputValueDefinition()
             .name(name)
@@ -116,7 +116,7 @@ export function buildWhereInput(
           )
         }
 
-        if (isEnumType(gqlType)) {
+        if (gqlType && isEnumType(gqlType)) {
           return fields.concat(
             new InputValueDefinition()
             .name(name)
@@ -137,7 +137,7 @@ export function buildWhereInput(
           )
         }
 
-        if (isObjectType(gqlType)) {
+        if (gqlType && isObjectType(gqlType)) {
           const objectTypeName = whereInputName(namedType.name.value)
 
           if (list) {

@@ -64,6 +64,10 @@ describe('buildCreateInput', () => {
         .name('text')
         .type(NonNullType.node(NamedType.node('String')))
         .node(),
+        new InputValueDefinition()
+        .name('comments')
+        .type(NamedType.node('CommentCreateManyInput'))
+        .node()
       ])
       .node()
       const inputObjectTypeDefinition = buildCreateInput(given as ObjectTypeDefinitionNode, schema)

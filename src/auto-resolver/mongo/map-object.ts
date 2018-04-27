@@ -2,7 +2,10 @@ import {
   FieldDefinitionNode,
   ObjectTypeDefinitionNode,
 } from 'graphql/language'
-import { GraphQLSchema } from 'graphql/type'
+import {
+  isObjectType,
+  GraphQLSchema,
+} from 'graphql/type'
 import { typeFromAST } from 'graphql/utilities'
 
 import { camelize } from 'inflected'
@@ -11,7 +14,6 @@ import {
   unwrap,
   hasDirective,
 } from '../../utilities'
-import { isObjectType } from '../../type'
 
 import { ResolverMap } from '..'
 
@@ -54,19 +56,19 @@ export function mapObject(
           break
         }
         default: {
-          if (!hasDirective(fieldDirectives, 'embedded') && isObjectType(gqlType)) {
-            resolvers[name] = (object, args, context, meta) => {
+          if (gqlType && isObjectType(gqlType) && !hasDirective(fieldDirectives, 'embedded')) {
+            resolvers[name] = (source, args, context, info) => {
               if (list) {
-                if (object[name] !== undefined) {
-                  Object.assign(args, { where: { id_in: object[name] } })
-                  return find(collection)(null, args, context, meta)
+                if (source[name] !== undefined) {
+                  Object.assign(args, { where: { id_in: source[name] } })
+                  return find(collection)(null, args, context, info)
                 } else {
                   return []
                 }
               }
 
-              Object.assign(args, { where: { id: object[name] } })
-              return findOne(collection)(null, args, context, meta)
+              Object.assign(args, { where: { id: source[name] } })
+              return findOne(collection)(null, args, context, info)
             }
           }
         }
