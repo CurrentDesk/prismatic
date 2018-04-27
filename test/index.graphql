@@ -1,9 +1,0 @@
-# import * from '../types/built-in.graphql'
-# import * from '../../../post-prisma/database/datamodel.graphql'
-
-scalar DateTime
-
-input Discard {
-  post: Post
-  comment: Comment
-}
