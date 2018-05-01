@@ -75,7 +75,11 @@ export function insertOne(collectionName: string): GraphQLFieldResolver<object, 
               const [ match ] = name.match(/^[A-Z][a-z]+/) as string[]
               const collection = db.collection(tableize(match))
 
-              const insert = collection.insertMany(create).then(({ insertedIds }) => data[key].splice(-1, 0, insertedIds))
+              const insert = collection.insertMany(create).then(({ insertedCount, insertedIds }) => {
+                const ids = Array.from(Object.assign(insertedIds, { length: insertedCount }))
+
+                return data[key].splice(-1, 0, ...ids)
+              })
 
               queries.push(insert)
             }

@@ -2,7 +2,7 @@ import {
   FieldDefinitionNode,
   ObjectTypeDefinitionNode,
 } from 'graphql/language'
-import { camelize } from 'inflected'
+import { tableize } from 'inflected'
 
 import { unwrap } from '../../utilities'
 
@@ -25,7 +25,7 @@ export function mapQuery({ fields }: ObjectTypeDefinitionNode) {
       namedType,
       list,
     } = unwrap(type)
-    const collection = camelize(namedType.name.value, false)
+    const collection = tableize(namedType.name.value)
 
     resolvers[name] = list ? find(collection) : findOne(collection)
 

@@ -8,7 +8,7 @@ import {
 } from 'graphql/type'
 import { typeFromAST } from 'graphql/utilities'
 
-import { camelize } from 'inflected'
+import { tableize } from 'inflected'
 
 import {
   unwrap,
@@ -43,7 +43,7 @@ export function mapObject(
         namedType,
       } = unwrap(type)
       const gqlType = typeFromAST(schema, namedType)
-      const collection = camelize(namedType.name.value, false)
+      const collection = tableize(namedType.name.value)
 
       switch (name) {
         case 'id': {

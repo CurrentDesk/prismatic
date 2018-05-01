@@ -30,9 +30,10 @@ export const createInputName = (name: string) => `${name}CreateInput`
 export function buildCreateInput(
   {
     name: {
-      value: name
+      value: name,
     },
-    fields
+    fields,
+    directives: objectTypeDirectives,
   }: ObjectTypeDefinitionNode,
   schema: GraphQLSchema
 ): InputObjectTypeDefinitionNode {
@@ -51,7 +52,7 @@ export function buildCreateInput(
       }: FieldDefinitionNode
     ) => {
       // These are handled internally
-      if (['id', 'createdAt', 'updatedAt'].includes(name)) {
+      if (!hasDirective(objectTypeDirectives, 'embedded') && ['id', 'createdAt', 'updatedAt'].includes(name)) {
         return fields
       }
 

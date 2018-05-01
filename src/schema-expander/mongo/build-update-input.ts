@@ -27,9 +27,10 @@ export const updateInputName = (name: string) => `${name}UpdateInput`
 export function buildUpdateInput(
   {
     name: {
-      value: name
+      value: name,
     },
     fields,
+    directives: objectTypeDirectives,
   }: ObjectTypeDefinitionNode,
   schema: GraphQLSchema
 ): InputObjectTypeDefinitionNode {
@@ -47,12 +48,22 @@ export function buildUpdateInput(
         directives,
       }: FieldDefinitionNode
     ) => {
-      // These are handled internally
-      if (['id', 'createdAt', 'updatedAt'].includes(name)) {
+      if (!hasDirective(objectTypeDirectives, 'embedded') && ['id', 'createdAt', 'updatedAt'].includes(name)) {
+        // These are handled internally
         return fields
       }
 
       const { namedType, list } = unwrap(type)
+
+      if (hasDirective(directives, 'embedded')) {
+        return fields.concat(
+          new InputValueDefinition()
+          .name(name)
+          .type(NamedType.node(list ? updateManyInputName(namedType.name.value) : updateInputName(namedType.name.value)))
+          .node()
+        )
+      }
+
       const gqlType = typeFromAST(schema, namedType)
 
       if (gqlType && isInputType(gqlType)) {
@@ -60,15 +71,6 @@ export function buildUpdateInput(
           new InputValueDefinition()
           .name(name)
           .type(namedType)
-          .node()
-        )
-      }
-
-      if (hasDirective(directives, 'embedded')) {
-        return fields.concat(
-          new InputValueDefinition()
-          .name(name)
-          .type(NamedType.node(list ? updateManyInputName(namedType.name.value) : updateInputName(namedType.name.value)))
           .node()
         )
       }

@@ -2,7 +2,7 @@ import {
   FieldDefinitionNode,
   ObjectTypeDefinitionNode,
 } from 'graphql/language'
-import { camelize } from 'inflected'
+import { tableize } from 'inflected'
 
 import { unwrap } from '../../utilities'
 
@@ -21,7 +21,7 @@ export function mapMutation({ fields }: ObjectTypeDefinitionNode) {
     }: FieldDefinitionNode
   ) => {
     const { namedType } = unwrap(type)
-    const collection = camelize(namedType.name.value, false)
+    const collection = tableize(namedType.name.value)
     const match = name.match(/^([^A-Z]+)/)
 
     if (match) {
