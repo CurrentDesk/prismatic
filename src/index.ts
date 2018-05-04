@@ -8,7 +8,6 @@ import {
   NamedType,
   NonNullType,
   DirectiveDefinition,
-  ScalarTypeDefinition,
   InputValueDefinition,
 } from './builders'
 
@@ -45,7 +44,7 @@ export const builtIns = print(
           new NonNullType()
           .type(
             new NamedType()
-            .name('Any')
+            .name('String')
             .node()
           )
           .node()
@@ -55,10 +54,6 @@ export const builtIns = print(
       .locations([
         'FIELD_DEFINITION',
       ])
-      .node(),
-      new ScalarTypeDefinition()
-      .description('Support for mixed types')
-      .name('Any')
       .node(),
     ].concat(definitions)
   )
