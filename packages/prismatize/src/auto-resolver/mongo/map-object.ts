@@ -13,7 +13,7 @@ import { tableize } from 'inflected'
 import {
   unwrap,
   hasDirective,
-} from '../../utilities'
+} from '@currentdesk/graphql-ast'
 
 import { ResolverMap } from '..'
 

@@ -4,7 +4,7 @@ import {
 } from 'graphql/language'
 import { tableize } from 'inflected'
 
-import { unwrap } from '../../utilities'
+import { unwrap } from '@currentdesk/graphql-ast'
 
 import { ResolverMap } from '..'
 

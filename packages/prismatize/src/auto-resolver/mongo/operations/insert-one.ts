@@ -13,7 +13,7 @@ import {
 } from 'graphql/type'
 import { tableize } from 'inflected'
 
-import { getNamedType } from '../../../utilities'
+import { getNamedType } from '@currentdesk/graphql-ast'
 
 import { MongoContext } from '..'
 
