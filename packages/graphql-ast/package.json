@@ -1,0 +1,19 @@
+{
+  "name": "@currentdesk/graphql-ast",
+  "version": "1.0.0",
+  "description": "Builders and helpers for GraphQL AST manipulation.",
+  "main": "dist/src/index.js",
+  "typings": "./dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": "git@github.com:CurrentDesk/prismatize.git",
+  "author": "TJ Peden <tj.peden@tjcoding.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/graphql": "^0.13.0",
+    "tslint": "^5.10.0",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.8.3"
+  }
+}

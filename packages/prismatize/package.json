@@ -1,0 +1,70 @@
+{
+  "name": "@currentdesk/prismatize",
+  "version": "0.1.4",
+  "description": "A node library that converts your database into a GraphQL API like Prisma.",
+  "author": "TJ Peden <tj.peden@currentdesk.com>",
+  "contributors": [
+    "Patrick Reames <patrick.reames@currentdesk.com"
+  ],
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "./dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CurrentDesk/prismatize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CurrentDesk/prismatize/issues"
+  },
+  "homepage": "https://github.com/CurrentDesk/prismatize#readme",
+  "private": false,
+  "scripts": {
+    "prepublishOnly": "yarn clean && yarn build",
+    "build": "tsc -d -p .",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@currentdesk/graphql-ast": "^1.0.0",
+    "graphql": "^0.13.1",
+    "graphql-import": "^0.5.0",
+    "graphql-yoga": "^1.4.3",
+    "mongodb": "^3.0.3",
+    "ramda": "^0.25.0",
+    "yargs": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/graphql": "^0.13.0",
+    "@types/inflected": "^1.1.29",
+    "@types/jest": "^22.2.3",
+    "@types/mongodb": "^3.0.5",
+    "@types/node": "^9.4.0",
+    "@types/yargs": "^10.0.1",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.3",
+    "tslint": "^5.9.1",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.8.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.spec.(js|ts)"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/lib/"
+    ],
+    "transform": {
+      "^.+\\.(ts|js)x?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ]
+  }
+}
