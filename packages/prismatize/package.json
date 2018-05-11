@@ -23,13 +23,14 @@
   "homepage": "https://github.com/CurrentDesk/prismatize#readme",
   "private": false,
   "scripts": {
-    "prepublishOnly": "yarn clean && yarn build",
     "build": "tsc -d -p .",
+    "build:watch": "tsc -d -p . --watch",
     "clean": "rm -rf dist",
+    "prepublishOnly": "yarn clean && yarn build",
     "test": "jest"
   },
   "dependencies": {
-    "@currentdesk/graphql-ast": "^1.0.0",
+    "@currentdesk/graphql-ast": "^0.1.0",
     "graphql": "^0.13.1",
     "graphql-import": "^0.5.0",
     "graphql-yoga": "^1.4.3",
