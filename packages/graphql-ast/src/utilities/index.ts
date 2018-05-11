@@ -14,11 +14,6 @@ export interface TypeContext {
   namedType: NamedTypeNode
 }
 
-export interface Relation {
-  toMany?: boolean
-  name: string
-}
-
 export function isWrappingType(type: TypeNode): type is WrappingTypeNode {
   return (type as WrappingTypeNode).type !== undefined
 }
@@ -47,20 +42,6 @@ export function unwrap(type: TypeNode, context: TypeContext = {} as TypeContext)
   context.namedType = type
 
   return context
-}
-
-export function getRelation(type: TypeNode, relation: Relation = {} as Relation): Relation {
-  if (type.kind === 'ListType') {
-    relation.toMany = true
-  }
-
-  if (isWrappingType(type)) {
-    return getRelation(type.type, relation)
-  }
-
-  relation.name = type.name.value
-
-  return relation
 }
 
 export function hasDirective(directives: ReadonlyArray<DirectiveNode> | undefined, name: string): boolean {
