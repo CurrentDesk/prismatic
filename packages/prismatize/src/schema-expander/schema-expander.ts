@@ -8,6 +8,7 @@ import { buildSchema } from 'graphql/utilities'
 import { GraphQLSchema } from 'graphql/type'
 
 import { ExpansionVisitor } from './expansion-visitor'
+import { RelationshipManager } from './relationship-manager'
 import { ArgumentsBuilder } from './arguments-builder'
 import { FieldBuilder } from './field-builder'
 import { InputBuilder } from './input-builder'
@@ -21,11 +22,14 @@ export abstract class SchemaExpander {
 
   protected schema: GraphQLSchema
 
+  private relationshipManager: RelationshipManager
   private ast: DocumentNode
 
   public constructor(models: string) {
     this.schema = buildSchema(models)
     this.ast = parse(models, { noLocation: true })
+
+    this.relationshipManager = new RelationshipManager(this.schema)
   }
 
   public expand(models: string): string {
@@ -33,6 +37,7 @@ export abstract class SchemaExpander {
       this.argumentsBuilder,
       this.fieldBuilder,
       this.inputBuilder,
+      this.relationshipManager,
       this.schema,
     )
 

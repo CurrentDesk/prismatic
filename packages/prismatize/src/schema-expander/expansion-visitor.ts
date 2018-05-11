@@ -25,6 +25,7 @@ import {
   ObjectTypeDefinition,
 } from '@currentdesk/graphql-ast'
 
+import { RelationshipManager } from './relationship-manager'
 import { ArgumentsBuilder } from './arguments-builder'
 import { FieldBuilder } from './field-builder'
 import { InputBuilder } from './input-builder'
@@ -50,6 +51,7 @@ export class ExpansionVisitor {
     private argumentsBuilder: ArgumentsBuilder,
     private fieldBuilder: FieldBuilder,
     private inputBuilder: InputBuilder,
+    private relationshipManager: RelationshipManager,
     protected schema: GraphQLSchema
   ) {
     this.models = []
@@ -59,7 +61,7 @@ export class ExpansionVisitor {
 
   public ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
     this.models.push(node)
-    // this.recordRelations(node)
+    this.relationshipManager.recordRelationships(node)
   }
 
   public FieldDefinition(node: FieldDefinitionNode) {

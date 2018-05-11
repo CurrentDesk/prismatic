@@ -13,32 +13,38 @@ import {
   isWrappingType,
 } from '@currentdesk/graphql-ast'
 
-export interface Relation {
+export interface Relationship {
   name: string
   toMany: boolean
   relatedName: string
 }
 
-function getRelation(type: TypeNode, relation: Partial<Relation>): Relation {
+function getRelationship(type: TypeNode, relationship: Partial<Relationship>): Relationship {
   if (type.kind === 'ListType') {
-    relation.toMany = true
+    relationship.toMany = true
   }
 
   if (isWrappingType(type)) {
-    return getRelation(type.type, relation)
+    return getRelationship(type.type, relationship)
   }
 
-  relation.relatedName = type.name.value
+  relationship.relatedName = type.name.value
 
-  return relation as Relation
+  return relationship as Relationship
 }
 
 export class RelationshipManager {
-  private relations: Relation[]
+  private relationships: Relationship[]
 
   public constructor(private schema: GraphQLSchema) {}
 
-  public recordRelations(
+  public hasRelationship(type: TypeNode): boolean {
+    const gqlType = typeFromAST(this.schema, getNamedType(type))
+
+    return gqlType !== undefined && isObjectType(gqlType)
+  }
+
+  public recordRelationships(
     {
       name: {
         value: name,
@@ -46,15 +52,9 @@ export class RelationshipManager {
       fields,
     }: ObjectTypeDefinitionNode,
   ) {
-    (fields || []).forEach(({
-      type,
-    }) => {
-      const gqlType = typeFromAST(this.schema, getNamedType(type))
-
-      if (gqlType && isObjectType(gqlType)) {
-        const relation = getRelation(type, { name })
-
-        this.relations.push(relation)
+    (fields || []).forEach(({ type }) => {
+      if (this.hasRelationship(type)) {
+        this.relationships.push(getRelationship(type, { name }))
       }
     })
   }
