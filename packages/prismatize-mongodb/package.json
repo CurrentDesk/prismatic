@@ -1,13 +1,34 @@
 {
   "name": "@currentdesk/prismatize-mongodb",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A node library that converts your MongoDB database into a GraphQL API like Prisma.",
-  "main": "index.js",
-  "repository": "git@github.com:CurrentDesk/prismatize.git",
-  "author": "TJ Peden <tj.peden@tjcoding.com>",
+  "author": "TJ Peden <tj.peden@currentdesk.com>",
+  "contributors": [
+    "Patrick Reames <patrick.reames@currentdesk.com"
+  ],
   "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CurrentDesk/prismatize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CurrentDesk/prismatize/issues"
+  },
+  "homepage": "https://github.com/CurrentDesk/prismatize#readme",
+  "private": false,
+  "scripts": {
+    "build": "tsc -d -p .",
+    "build:watch": "tsc -d -p . --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "yarn clean && yarn build"
+  },
   "dependencies": {
-    "@currentdesk/graphql-ast": "^1.0.0",
+    "@currentdesk/graphql-ast": "^0.1.0",
     "@currentdesk/prismatize": "^0.1.4",
     "inflected": "^2.0.4"
   },
