@@ -32,7 +32,7 @@ export abstract class SchemaExpander {
     this.relationshipManager = new RelationshipManager(this.schema)
   }
 
-  public expand(models: string): string {
+  public expand(): string {
     const expansionVisitor = new ExpansionVisitor(
       this.argumentsBuilder,
       this.fieldBuilder,

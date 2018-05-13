@@ -30,6 +30,7 @@
   "dependencies": {
     "@currentdesk/graphql-ast": "^0.1.0",
     "@currentdesk/prismatize": "^0.1.4",
+    "commander": "^2.15.1",
     "inflected": "^2.0.4"
   },
   "devDependencies": {

@@ -1,1 +1,1 @@
-export class PrismatizeMongoDB {}
+export * from './schema-expander'

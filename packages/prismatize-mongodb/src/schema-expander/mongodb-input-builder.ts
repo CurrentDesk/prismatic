@@ -18,10 +18,10 @@ export class MongoDBInputBuilder extends InputBuilder {
     return new InputObjectTypeDefinition()
     .name(this.namer.buildWhereInputName(name))
     .fields(
-      () =>
-      this.fieldBuilder.buildWhereInputLogicalFields(name).concat(
-        this.fieldBuilder.buildWhereInputFields(fields)
-      )
+      () => [
+        ...this.fieldBuilder.buildWhereInputLogicalFields(name),
+        ...this.fieldBuilder.buildWhereInputFields(fields || []),
+      ]
     )
     .node()
   }
@@ -34,7 +34,7 @@ export class MongoDBInputBuilder extends InputBuilder {
       fields,
     }: ObjectTypeDefinitionNode
   ): InputObjectTypeDefinitionNode | undefined {
-    const uniqueFields = this.fieldBuilder.buildWhereUniqueInputFields(fields)
+    const uniqueFields = this.fieldBuilder.buildWhereUniqueInputFields(fields || [])
 
     if (uniqueFields.length > 0) {
       return new InputObjectTypeDefinition()
