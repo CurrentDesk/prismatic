@@ -100,12 +100,12 @@ export class ExpansionVisitor {
 
   private buildInputs(): InputObjectTypeDefinitionNode[] {
     const buildInputsForModels = chainBuilders([
-      this.inputBuilder.buildWhereInput,
-      this.inputBuilder.buildCreateInput,
-      this.inputBuilder.buildUpdateInput,
-      this.inputBuilder.buildWhereUniqueInput,
-      this.inputBuilder.buildCreateRelationalInput,
-      this.inputBuilder.buildUpdateRelationalInput,
+      (node) => this.inputBuilder.buildWhereInput(node),
+      (node) => this.inputBuilder.buildCreateInput(node),
+      (node) => this.inputBuilder.buildUpdateInput(node),
+      (node) => this.inputBuilder.buildWhereUniqueInput(node),
+      // (node) => this.inputBuilder.buildCreateRelationalInput(node),
+      // (node) => this.inputBuilder.buildUpdateRelationalInput(node),
     ])
 
     return buildInputsForModels(this.models)
@@ -116,8 +116,8 @@ export class ExpansionVisitor {
     .name('Query')
     .fields(() => {
       const buildQueryFieldsForModels = chainBuilders([
-        this.fieldBuilder.buildReadManyField,
-        this.fieldBuilder.buildReadItemField,
+        (node) => this.fieldBuilder.buildReadManyField(node),
+        (node) => this.fieldBuilder.buildReadItemField(node),
       ])
 
       return buildQueryFieldsForModels(this.models)
@@ -130,11 +130,11 @@ export class ExpansionVisitor {
     .name('Mutation')
     .fields(() => {
       const buildMutationFieldsForModels = chainBuilders([
-        this.fieldBuilder.buildCreateItemField,
-        this.fieldBuilder.buildUpdateItemField,
-        this.fieldBuilder.buildDeleteItemField,
-        this.fieldBuilder.buildUpdateManyField,
-        this.fieldBuilder.buildDeleteManyField,
+        (node) => this.fieldBuilder.buildCreateItemField(node),
+        (node) => this.fieldBuilder.buildUpdateItemField(node),
+        (node) => this.fieldBuilder.buildDeleteItemField(node),
+        (node) => this.fieldBuilder.buildUpdateManyField(node),
+        (node) => this.fieldBuilder.buildDeleteManyField(node),
       ])
 
       return buildMutationFieldsForModels(this.models)

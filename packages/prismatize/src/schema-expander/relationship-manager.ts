@@ -36,7 +36,9 @@ function getRelationship(type: TypeNode, relationship: Partial<Relationship>): R
 export class RelationshipManager {
   private relationships: Relationship[]
 
-  public constructor(private schema: GraphQLSchema) {}
+  public constructor(private schema: GraphQLSchema) {
+    this.relationships = []
+  }
 
   public hasRelationship(type: TypeNode): boolean {
     const gqlType = typeFromAST(this.schema, getNamedType(type))
@@ -44,14 +46,7 @@ export class RelationshipManager {
     return gqlType !== undefined && isObjectType(gqlType)
   }
 
-  public recordRelationships(
-    {
-      name: {
-        value: name,
-      },
-      fields,
-    }: ObjectTypeDefinitionNode,
-  ) {
+  public recordRelationships({ name: { value: name }, fields }: ObjectTypeDefinitionNode) {
     (fields || []).forEach(({ type }) => {
       if (this.hasRelationship(type)) {
         this.relationships.push(getRelationship(type, { name }))
