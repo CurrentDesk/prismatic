@@ -25,7 +25,10 @@ import {
   ObjectTypeDefinition,
 } from '@currentdesk/graphql-ast'
 
-import { RelationshipManager } from './relationship-manager'
+import {
+  Relationship,
+  RelationshipManager,
+} from './relationship-manager'
 import { ArgumentsBuilder } from './arguments-builder'
 import { FieldBuilder } from './field-builder'
 import { InputBuilder } from './input-builder'
@@ -37,10 +40,15 @@ const definitionOrder = [
   'ObjectTypeDefinition',
 ]
 
-type Builder<T> = (node: ObjectTypeDefinitionNode) => T | undefined
-type BuildFn<T> = (nodes: ObjectTypeDefinitionNode[]) => T[]
+type ModelBuilder<T> = (node: ObjectTypeDefinitionNode) => T | undefined
+type ModelsBuildFn<T> = (nodes: ObjectTypeDefinitionNode[]) => T[]
 
-const chainBuilders = <T>(builders: Builder<T>[]): BuildFn<T> => pipe(ap(builders), reject(isNil))
+const chainBuildersForModels = <T>(builders: ModelBuilder<T>[]): ModelsBuildFn<T> => pipe(ap(builders), reject(isNil))
+
+type RelationshipBuilder<T> = (relationship: Relationship) => T | undefined
+type RelationshipsBuildFn<T> = (relationships: Relationship[]) => T[]
+
+const chainBuildersForRelationships = <T>(builders: RelationshipBuilder<T>[]): RelationshipsBuildFn<T> => pipe(ap(builders), reject(isNil))
 
 export class ExpansionVisitor {
   public Document: any = {}
@@ -99,7 +107,7 @@ export class ExpansionVisitor {
   }
 
   private buildInputs(): InputObjectTypeDefinitionNode[] {
-    const buildInputsForModels = chainBuilders([
+    const buildInputsForModels = chainBuildersForModels([
       (node) => this.inputBuilder.buildWhereInput(node),
       (node) => this.inputBuilder.buildCreateInput(node),
       (node) => this.inputBuilder.buildUpdateInput(node),
@@ -107,15 +115,22 @@ export class ExpansionVisitor {
       // (node) => this.inputBuilder.buildCreateRelationalInput(node),
       // (node) => this.inputBuilder.buildUpdateRelationalInput(node),
     ])
+    const buildInputsForRelationships = chainBuildersForRelationships([
+      (relationship) => this.inputBuilder.buildCreateRelationalInput(relationship),
+      (relationship) => this.inputBuilder.buildUpdateRelationalInput(relationship),
+    ])
 
-    return buildInputsForModels(this.models)
+    return [
+      ...buildInputsForModels(this.models),
+      ...buildInputsForRelationships(this.relationshipManager.allRelationships)
+    ]
   }
 
   private buildQuery(): ObjectTypeDefinitionNode {
     return new ObjectTypeDefinition()
     .name('Query')
     .fields(() => {
-      const buildQueryFieldsForModels = chainBuilders([
+      const buildQueryFieldsForModels = chainBuildersForModels([
         (node) => this.fieldBuilder.buildReadManyField(node),
         (node) => this.fieldBuilder.buildReadItemField(node),
       ])
@@ -129,7 +144,7 @@ export class ExpansionVisitor {
     return new ObjectTypeDefinition()
     .name('Mutation')
     .fields(() => {
-      const buildMutationFieldsForModels = chainBuilders([
+      const buildMutationFieldsForModels = chainBuildersForModels([
         (node) => this.fieldBuilder.buildCreateItemField(node),
         (node) => this.fieldBuilder.buildUpdateItemField(node),
         (node) => this.fieldBuilder.buildDeleteItemField(node),

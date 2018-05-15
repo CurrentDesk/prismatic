@@ -40,6 +40,10 @@ export class RelationshipManager {
     this.relationships = []
   }
 
+  public get allRelationships(): Relationship[] {
+    return this.relationships
+  }
+
   public hasRelationship(type: TypeNode): boolean {
     const gqlType = typeFromAST(this.schema, getNamedType(type))
 
