@@ -3,7 +3,10 @@ import {
   InputObjectTypeDefinitionNode,
 } from 'graphql/language'
 
-import { InputBuilder } from '@currentdesk/prismatize'
+import {
+  Relationship,
+  InputBuilder,
+} from '@currentdesk/prismatize'
 import { InputObjectTypeDefinition } from '@currentdesk/graphql-ast'
 
 export class MongoDBInputBuilder extends InputBuilder {
@@ -56,17 +59,6 @@ export class MongoDBInputBuilder extends InputBuilder {
     .node()
   }
 
-  public buildCreateRelationalInput(
-    {
-      name: {
-        value: name,
-      },
-    }: ObjectTypeDefinitionNode
-  ): InputObjectTypeDefinitionNode | undefined {
-    return new InputObjectTypeDefinition()
-    .node()
-  }
-
   public buildUpdateInput(
     {
       name: {
@@ -79,14 +71,19 @@ export class MongoDBInputBuilder extends InputBuilder {
     .node()
   }
 
-  public buildUpdateRelationalInput(
-    {
-      name: {
-        value: name,
-      },
-    }: ObjectTypeDefinitionNode
-  ): InputObjectTypeDefinitionNode | undefined {
-    return new InputObjectTypeDefinition()
-    .node()
+  public buildCreateRelationalInput(relationship: Relationship): InputObjectTypeDefinitionNode | undefined {
+    if (this.relationshipManager.hasRelationship(relationship.relatedName, relationship.name)) {
+      return new InputObjectTypeDefinition()
+      .name(this.namer.buildCreateRelationalName(relationship))
+      .node()
+    }
+  }
+
+  public buildUpdateRelationalInput(relationship: Relationship): InputObjectTypeDefinitionNode | undefined {
+    if (this.relationshipManager.hasRelationship(relationship.relatedName, relationship.name)) {
+      return new InputObjectTypeDefinition()
+      .name(this.namer.buildUpdateRelationalName(relationship))
+      .node()
+    }
   }
 }

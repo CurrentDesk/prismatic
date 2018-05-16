@@ -9,20 +9,23 @@ export class MongoDBSchemaExpander extends SchemaExpander {
   constructor(models: string) {
     super(models)
 
-    this.namer = new MongoDBNamer()
+    this.namer = new MongoDBNamer(
+      this.relationshipManager
+    )
     this.argumentsBuilder = new MongoDBArgumentsBuilder(
-      this.namer,
       this.schema,
+      this.namer,
     )
     this.fieldBuilder = new MongoDBFieldBuilder(
+      this.schema,
       this.namer,
       this.argumentsBuilder,
-      this.schema,
     )
     this.inputBuilder = new MongoDBInputBuilder(
+      this.schema,
       this.namer,
       this.fieldBuilder,
-      this.schema,
+      this.relationshipManager,
     )
   }
 }
