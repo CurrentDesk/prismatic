@@ -10,9 +10,9 @@ import { Namer } from './namer'
 
 export abstract class FieldBuilder {
   public constructor(
+    protected schema: GraphQLSchema,
     protected namer: Namer,
     protected argumentsBuilder: ArgumentsBuilder,
-    protected schema: GraphQLSchema
   ) {}
 
   public abstract buildReadManyField(node: ObjectTypeDefinitionNode): FieldDefinitionNode | undefined

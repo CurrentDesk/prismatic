@@ -4,9 +4,7 @@ import {
   ObjectTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
 } from 'graphql/language'
-import {
-  GraphQLSchema,
-} from 'graphql/type'
+import { GraphQLSchema } from 'graphql/type'
 import {
   ap,
   path,

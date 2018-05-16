@@ -8,8 +8,8 @@ import { Namer } from './namer'
 
 export abstract class ArgumentsBuilder {
   public constructor(
-    protected namer: Namer,
     protected schema: GraphQLSchema,
+    protected namer: Namer,
   ) {}
 
   public abstract buildWhereArgumentsForField(node: FieldDefinitionNode)

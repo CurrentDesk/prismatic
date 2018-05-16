@@ -6,13 +6,17 @@ import { GraphQLSchema } from 'graphql/type'
 
 import { Namer } from './namer'
 import { FieldBuilder } from './field-builder'
-import { Relationship } from './relationship-manager'
+import {
+  Relationship,
+  RelationshipManager,
+} from './relationship-manager'
 
 export abstract class InputBuilder {
   public constructor(
+    protected schema: GraphQLSchema,
     protected namer: Namer,
     protected fieldBuilder: FieldBuilder,
-    protected schema: GraphQLSchema
+    protected relationshipManager: RelationshipManager,
   ) {}
 
   public abstract buildWhereInput(node: ObjectTypeDefinitionNode): InputObjectTypeDefinitionNode | undefined

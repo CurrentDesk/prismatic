@@ -15,6 +15,7 @@ import { InputBuilder } from './input-builder'
 import { Namer } from './namer'
 
 export abstract class SchemaExpander {
+  protected relationshipManager: RelationshipManager
   protected argumentsBuilder: ArgumentsBuilder
   protected fieldBuilder: FieldBuilder
   protected inputBuilder: InputBuilder
@@ -22,7 +23,6 @@ export abstract class SchemaExpander {
 
   protected schema: GraphQLSchema
 
-  private relationshipManager: RelationshipManager
   private ast: DocumentNode
 
   public constructor(models: string) {

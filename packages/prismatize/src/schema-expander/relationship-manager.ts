@@ -44,15 +44,23 @@ export class RelationshipManager {
     return this.relationships
   }
 
-  public hasRelationship(type: TypeNode): boolean {
+  public isRelation(type: TypeNode): boolean {
     const gqlType = typeFromAST(this.schema, getNamedType(type))
 
     return gqlType !== undefined && isObjectType(gqlType)
   }
 
+  public hasRelationship(name: string, relatedName: string): boolean {
+    return this.relationships.some(other => other.name === name && other.relatedName === relatedName)
+  }
+
+  public isToManyRelationship(name: string, relatedName: string): boolean {
+    return this.relationships.some(other => other.name === name && other.relatedName === relatedName && other.toMany)
+  }
+
   public recordRelationships({ name: { value: name }, fields }: ObjectTypeDefinitionNode) {
     (fields || []).forEach(({ type }) => {
-      if (this.hasRelationship(type)) {
+      if (this.isRelation(type)) {
         this.relationships.push(getRelationship(type, { name }))
       }
     })
