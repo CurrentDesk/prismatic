@@ -87,13 +87,13 @@ export class ExpansionVisitor {
     const inputs = this.buildInputs()
 
     return new Document(node)
-    .definitions(models =>
+    .definitions(definitions =>
       sortWith(
         [
-          ascend(pipe(prop('kind'), definitionOrder.indexOf)),
+          ascend(pipe(prop('kind'), kind => definitionOrder.indexOf(kind))),
           ascend(pipe(path(['name', 'value']), toLower))
         ],
-        models
+        definitions
       )
       .concat(
         sort(ascend(pipe(path(['name', 'value']), toLower)), inputs),
@@ -110,8 +110,6 @@ export class ExpansionVisitor {
       (node) => this.inputBuilder.buildCreateInput(node),
       (node) => this.inputBuilder.buildUpdateInput(node),
       (node) => this.inputBuilder.buildWhereUniqueInput(node),
-      // (node) => this.inputBuilder.buildCreateRelationalInput(node),
-      // (node) => this.inputBuilder.buildUpdateRelationalInput(node),
     ])
     const buildInputsForRelationships = chainBuildersForRelationships([
       (relationship) => this.inputBuilder.buildCreateRelationalInput(relationship),
