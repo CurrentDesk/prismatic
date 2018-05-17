@@ -5,6 +5,7 @@ import {
 } from 'graphql/language'
 import {
   isEnumType,
+  isInputType,
   isScalarType,
   isObjectType,
 } from 'graphql/type'
@@ -16,7 +17,11 @@ import {
   singularize,
 } from 'inflected'
 
-import { FieldBuilder } from '@currentdesk/prismatize'
+import {
+  Maybe,
+  Relationship,
+  FieldBuilder,
+} from '@currentdesk/prismatize'
 import {
   unwrap,
   hasDirective,
@@ -26,6 +31,12 @@ import {
   FieldDefinition,
   InputValueDefinition,
 } from '@currentdesk/graphql-ast'
+
+const SystemFields = [
+  'id',
+  'createdAt',
+  'updatedAt',
+]
 
 export class MongoDBFieldBuilder extends FieldBuilder {
   public buildReadManyField(
@@ -194,7 +205,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
           value: name,
         },
         type,
-      }: FieldDefinitionNode
+      }
     ) => {
       const {
         list,
@@ -296,17 +307,239 @@ export class MongoDBFieldBuilder extends FieldBuilder {
   public buildWhereUniqueInputFields(fields: ReadonlyArray<FieldDefinitionNode>): InputValueDefinitionNode[] {
     return fields
     .filter(({ directives }) => hasDirective(directives, 'unique'))
-    .map(
-      ({
+    .map((
+      {
         name: {
           value: name,
         },
         type,
-      }) =>
+      }
+    ) =>
       new InputValueDefinition()
       .name(name)
       .type(type.kind === 'NonNullType' ? type.type : type)
       .node()
     )
+  }
+
+  public buildCreateInputFields(
+    fields: ReadonlyArray<FieldDefinitionNode>,
+    {
+      name: {
+        value: modelName,
+      },
+      directives: modelDirectives,
+    }: ObjectTypeDefinitionNode,
+  ): InputValueDefinitionNode[] {
+    return fields.reduce((
+      fields: InputValueDefinitionNode[],
+      {
+        name: {
+          value: name,
+        },
+        type,
+        directives,
+      },
+    ) => {
+      const isModelEmbedded = hasDirective(modelDirectives, 'embedded')
+
+      if (!isModelEmbedded && SystemFields.includes(name)) return fields
+
+      const {
+        list,
+        required,
+        namedType,
+      } = unwrap(type)
+      const {
+        name: {
+          value: namedTypeName
+        }
+      } = namedType
+      const gqlType = typeFromAST(this.schema, namedType)
+      const isEmbedded = hasDirective(directives, 'embedded')
+      const hasDefaultValue = hasDirective(directives, 'default')
+
+      if (gqlType) {
+        if (isInputType(gqlType)) {
+          const typeNode = list ? ListType.node(NonNullType.node(namedType)) : namedType
+
+          return fields.concat(
+            new InputValueDefinition()
+            .name(name)
+            .type(required && !hasDefaultValue ? NonNullType.node(typeNode) : typeNode)
+            .node()
+          )
+        }
+
+        if (isObjectType(gqlType)) {
+          if (isEmbedded) {
+            const namedTypeNode = NamedType.node(this.namer.buildCreateInputName(namedTypeName))
+            const typeNode = list ? ListType.node(namedTypeNode) : namedTypeNode
+
+            return fields.concat(
+              new InputValueDefinition()
+              .name(name)
+              .type(required && !hasDefaultValue ? NonNullType.node(typeNode) : typeNode)
+              .node()
+            )
+          }
+
+          const relationship = this.relationshipManager.findRelationship(namedTypeName, modelName)
+          const namedTypeNode = NamedType.node(
+            relationship
+            ?
+            this.namer.buildCreateRelationalName(relationship)
+            :
+            this.namer.buildCreateInputName(namedTypeName)
+          )
+
+          return fields.concat(
+            new InputValueDefinition()
+            .name(name)
+            .type(required ? NonNullType.node(namedTypeNode) : namedTypeNode)
+            .node()
+          )
+        }
+      } else {
+        throw new Error('AST type not found in GraphQLSchema')
+      }
+
+      return fields
+    }, [])
+  }
+
+  public buildUpdateInputFields(
+    fields: ReadonlyArray<FieldDefinitionNode>,
+    {
+      name: {
+        value: modelName,
+      },
+      directives: modelDirectives,
+    }: ObjectTypeDefinitionNode,
+  ): InputValueDefinitionNode[] {
+    return fields.reduce((
+      fields: InputValueDefinitionNode[],
+      {
+        name: {
+          value: name,
+        },
+        type,
+        directives,
+      },
+    ) => {
+      const isModelEmbedded = hasDirective(modelDirectives, 'embedded')
+
+      if (!isModelEmbedded && SystemFields.includes(name)) return fields
+
+      const {
+        list,
+        namedType,
+      } = unwrap(type)
+      const {
+        name: {
+          value: namedTypeName
+        }
+      } = namedType
+      const gqlType = typeFromAST(this.schema, namedType)
+      const isEmbedded = hasDirective(directives, 'embedded')
+
+      if (gqlType) {
+        if (isInputType(gqlType)) {
+          return fields.concat(
+            new InputValueDefinition()
+            .name(name)
+            .type(namedType)
+            .node()
+          )
+        }
+
+        if (isObjectType(gqlType)) {
+          if (isEmbedded) {
+            const namedTypeNode = NamedType.node(this.namer.buildUpdateInputName(namedTypeName))
+            const typeNode = list ? ListType.node(namedTypeNode) : namedTypeNode
+
+            return fields.concat(
+              new InputValueDefinition()
+              .name(name)
+              .type(typeNode)
+              .node()
+            )
+          }
+
+          const relationship = this.relationshipManager.findRelationship(namedTypeName, modelName)
+          const namedTypeNode = NamedType.node(
+            relationship
+            ?
+            this.namer.buildUpdateRelationalName(relationship)
+            :
+            this.namer.buildUpdateInputName(namedTypeName)
+          )
+
+          return fields.concat(
+            new InputValueDefinition()
+            .name(name)
+            .type(namedTypeNode)
+            .node()
+          )
+        }
+      }
+
+      return fields
+    }, [])
+  }
+
+  public buildCreateRelationalInputField(
+    {
+      modelName,
+      relatedModelName,
+    }: Relationship
+  ): Maybe<InputValueDefinitionNode> {
+    const toMany = this.relationshipManager.isToManyRelationship(relatedModelName, modelName)
+    const namedTypeNode = NonNullType.node(NamedType.node(this.namer.buildCreateInputName(modelName, relatedModelName)))
+    const typeNode = toMany ? ListType.node(namedTypeNode) : namedTypeNode
+
+    return new InputValueDefinition()
+    .name('update')
+    .type(typeNode)
+    .node()
+  }
+
+  public buildConnectRelationalInputField(
+    {
+      modelName,
+      relatedModelName,
+    }: Relationship
+  ): Maybe<InputValueDefinitionNode> {
+    const toMany = this.relationshipManager.isToManyRelationship(relatedModelName, modelName)
+    const namedTypeNode = NonNullType.node(NamedType.node(this.namer.buildWhereUniqueInputName(modelName)))
+    const typeNode = toMany ? ListType.node(namedTypeNode) : namedTypeNode
+
+    return new InputValueDefinition()
+    .name('connect')
+    .type(typeNode)
+    .node()
+  }
+
+  public buildCreatePostRelationalInputFields({ modelName }: Relationship): InputValueDefinitionNode[] {
+    const gqlType = this.schema.getType(modelName)
+
+    if (gqlType) {
+      const {
+        fields,
+      } = gqlType.astNode as ObjectTypeDefinitionNode
+
+      return (fields || []).reduce((
+        fields: InputValueDefinitionNode[],
+        {
+          name: {
+            value: fieldName,
+          },
+        },
+      ) => {
+        return fields
+      }, [])
+    } else {
+      throw new Error('Model not found in GraphQLSchema')
+    }
   }
 }

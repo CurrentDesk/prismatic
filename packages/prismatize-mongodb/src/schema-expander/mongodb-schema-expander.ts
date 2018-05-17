@@ -20,6 +20,7 @@ export class MongoDBSchemaExpander extends SchemaExpander {
       this.schema,
       this.namer,
       this.argumentsBuilder,
+      this.relationshipManager,
     )
     this.inputBuilder = new MongoDBInputBuilder(
       this.schema,

@@ -18,11 +18,23 @@ export class MongoDBNamer extends Namer {
     return `${name}OrderByInput`
   }
 
-  public buildCreateInputName(name: string): string {
+  public buildCreateInputName(name: string, relatedName?: string): string {
+    if (relatedName) {
+      const toMany = this.relationshipManager.isToManyRelationship(name, relatedName)
+
+      return `${name}CreateWithout${toMany ? pluralize(relatedName) : relatedName}Input`
+    }
+
     return `${name}CreateInput`
   }
 
-  public buildUpdateInputName(name: string): string {
+  public buildUpdateInputName(name: string, relatedName?: string): string {
+    if (relatedName) {
+      const toMany = this.relationshipManager.isToManyRelationship(name, relatedName)
+
+      return `${name}UpdateWithout${toMany ? pluralize(relatedName) : relatedName}DataInput`
+    }
+
     return `${name}UpdateInput`
   }
 
@@ -36,19 +48,19 @@ export class MongoDBNamer extends Namer {
 
   private buildRelationName(
     {
-      name,
       toMany,
-      relatedName,
+      modelName,
+      relatedModelName,
     }: Relationship,
     action: string
   ): string {
-    const builder = [name, action]
+    const builder = [modelName, action]
 
-    builder.push(this.relationshipManager.isToManyRelationship(relatedName, name) ? 'Many' : 'One')
+    builder.push(this.relationshipManager.isToManyRelationship(relatedModelName, modelName) ? 'Many' : 'One')
 
-    if (this.relationshipManager.hasRelationship(relatedName, name)) {
+    if (this.relationshipManager.hasRelationship(relatedModelName, modelName)) {
       builder.push('Without')
-      builder.push(toMany ? pluralize(relatedName) : relatedName)
+      builder.push(toMany ? pluralize(relatedModelName) : relatedModelName)
     }
 
     builder.push('Input')
