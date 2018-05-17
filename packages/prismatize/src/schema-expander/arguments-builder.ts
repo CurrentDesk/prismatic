@@ -12,7 +12,7 @@ export abstract class ArgumentsBuilder {
     protected namer: Namer,
   ) {}
 
-  public abstract buildWhereArgumentsForField(node: FieldDefinitionNode)
+  public abstract buildWhereArgumentsForField(field: FieldDefinitionNode)
 
   public abstract buildWhereArguments(name: string): InputValueDefinitionNode[]
   public abstract buildWhereUniqueArguments(name: string): InputValueDefinitionNode[]

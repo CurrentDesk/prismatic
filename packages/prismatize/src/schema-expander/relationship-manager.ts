@@ -13,10 +13,13 @@ import {
   isWrappingType,
 } from '@currentdesk/graphql-ast'
 
+import { Maybe } from './maybe'
+
 export interface Relationship {
-  name: string
+  modelName: string
+  fieldName: string
+  relatedModelName: string
   toMany: boolean
-  relatedName: string
 }
 
 function getRelationship(type: TypeNode, relationship: Partial<Relationship>): Relationship {
@@ -28,7 +31,7 @@ function getRelationship(type: TypeNode, relationship: Partial<Relationship>): R
     return getRelationship(type.type, relationship)
   }
 
-  relationship.relatedName = type.name.value
+  relationship.relatedModelName = type.name.value
 
   return relationship as Relationship
 }
@@ -44,24 +47,46 @@ export class RelationshipManager {
     return this.relationships
   }
 
+  public findRelationship(modelName: string, relatedModelName: string): Maybe<Relationship> {
+    return this.relationships.find(other => other.modelName === modelName && other.relatedModelName === relatedModelName)
+  }
+
   public isRelation(type: TypeNode): boolean {
     const gqlType = typeFromAST(this.schema, getNamedType(type))
 
     return gqlType !== undefined && isObjectType(gqlType)
   }
 
-  public hasRelationship(name: string, relatedName: string): boolean {
-    return this.relationships.some(other => other.name === name && other.relatedName === relatedName)
+  public hasReverseRelationship({ modelName, relatedModelName }: Relationship): boolean {
+    return this.hasRelationship(relatedModelName, modelName)
   }
 
-  public isToManyRelationship(name: string, relatedName: string): boolean {
-    return this.relationships.some(other => other.name === name && other.relatedName === relatedName && other.toMany)
+  public hasRelationship(modelName: string, relatedModelName: string): boolean {
+    return this.relationships.some(other => other.modelName === modelName && other.relatedModelName === relatedModelName)
   }
 
-  public recordRelationships({ name: { value: name }, fields }: ObjectTypeDefinitionNode) {
-    (fields || []).forEach(({ type }) => {
+  public isToManyRelationship(modelName: string, relatedModelName: string): boolean {
+    return this.relationships.some(other => other.modelName === modelName && other.relatedModelName === relatedModelName && other.toMany)
+  }
+
+  public recordRelationships(
+    {
+      name: {
+        value: modelName,
+      },
+      fields,
+    }: ObjectTypeDefinitionNode,
+  ) {
+    (fields || []).forEach((
+      {
+        name: {
+          value: fieldName,
+        },
+        type,
+      },
+    ) => {
       if (this.isRelation(type)) {
-        this.relationships.push(getRelationship(type, { name }))
+        this.relationships.push(getRelationship(type, { fieldName, modelName }))
       }
     })
   }

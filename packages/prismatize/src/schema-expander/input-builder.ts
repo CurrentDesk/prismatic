@@ -4,6 +4,7 @@ import {
 } from 'graphql/language'
 import { GraphQLSchema } from 'graphql/type'
 
+import { Maybe } from './maybe'
 import { Namer } from './namer'
 import { FieldBuilder } from './field-builder'
 import {
@@ -19,12 +20,15 @@ export abstract class InputBuilder {
     protected relationshipManager: RelationshipManager,
   ) {}
 
-  public abstract buildWhereInput(node: ObjectTypeDefinitionNode): InputObjectTypeDefinitionNode | undefined
-  public abstract buildWhereUniqueInput(node: ObjectTypeDefinitionNode): InputObjectTypeDefinitionNode | undefined
+  public abstract buildWhereInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode>
+  public abstract buildWhereUniqueInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode>
 
-  public abstract buildCreateInput(node: ObjectTypeDefinitionNode): InputObjectTypeDefinitionNode | undefined
-  public abstract buildUpdateInput(node: ObjectTypeDefinitionNode): InputObjectTypeDefinitionNode | undefined
+  public abstract buildCreateInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode>
+  public abstract buildUpdateInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode>
 
-  public abstract buildCreateRelationalInput(relationship: Relationship): InputObjectTypeDefinitionNode | undefined
-  public abstract buildUpdateRelationalInput(relationship: Relationship): InputObjectTypeDefinitionNode | undefined
+  public abstract buildCreateRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode>
+  public abstract buildUpdateRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode>
+
+  public abstract buildCreatePostRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode>
+  public abstract buildUpdatePostRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode>
 }

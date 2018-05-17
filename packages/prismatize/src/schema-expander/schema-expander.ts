@@ -4,7 +4,7 @@ import {
   visit,
   DocumentNode,
 } from 'graphql/language'
-import { buildSchema } from 'graphql/utilities'
+import { buildASTSchema } from 'graphql/utilities'
 import { GraphQLSchema } from 'graphql/type'
 
 import { ExpansionVisitor } from './expansion-visitor'
@@ -26,8 +26,8 @@ export abstract class SchemaExpander {
   private ast: DocumentNode
 
   public constructor(models: string) {
-    this.schema = buildSchema(models)
     this.ast = parse(models, { noLocation: true })
+    this.schema = buildASTSchema(this.ast)
 
     this.relationshipManager = new RelationshipManager(this.schema)
   }

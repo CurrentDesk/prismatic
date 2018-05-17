@@ -114,6 +114,8 @@ export class ExpansionVisitor {
     const buildInputsForRelationships = chainBuildersForRelationships([
       (relationship) => this.inputBuilder.buildCreateRelationalInput(relationship),
       (relationship) => this.inputBuilder.buildUpdateRelationalInput(relationship),
+      (relationship) => this.inputBuilder.buildCreatePostRelationalInput(relationship),
+      (relationship) => this.inputBuilder.buildUpdatePostRelationalInput(relationship),
     ])
 
     return [
