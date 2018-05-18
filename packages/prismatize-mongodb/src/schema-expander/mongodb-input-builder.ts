@@ -107,6 +107,12 @@ export class MongoDBInputBuilder extends InputBuilder {
     if (this.relationshipManager.hasReverseRelationship(relationship)) {
       return new InputObjectTypeDefinition()
       .name(this.namer.buildUpdateRelationalName(relationship))
+      .fields(() => rejectNil([
+        this.fieldBuilder.buildCreateRelationalInputField(relationship),
+        this.fieldBuilder.buildConnectRelationalInputField(relationship),
+        this.fieldBuilder.buildDisconnectRelationalInputField(relationship),
+        this.fieldBuilder.buildDeleteRelationalInputField(relationship),
+      ]))
       .node()
     }
   }

@@ -499,7 +499,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
     const typeNode = toMany ? ListType.node(namedTypeNode) : namedTypeNode
 
     return new InputValueDefinition()
-    .name('update')
+    .name('create')
     .type(typeNode)
     .node()
   }
@@ -511,8 +511,8 @@ export class MongoDBFieldBuilder extends FieldBuilder {
     }: Relationship
   ): Maybe<InputValueDefinitionNode> {
     const toMany = this.relationshipManager.isToManyRelationship(relatedModelName, modelName)
-    const namedTypeNode = NonNullType.node(NamedType.node(this.namer.buildWhereUniqueInputName(modelName)))
-    const typeNode = toMany ? ListType.node(namedTypeNode) : namedTypeNode
+    const namedTypeNode = NamedType.node(this.namer.buildWhereUniqueInputName(modelName))
+    const typeNode = toMany ? ListType.node(NonNullType.node(namedTypeNode)) : namedTypeNode
 
     return new InputValueDefinition()
     .name('connect')
@@ -520,24 +520,78 @@ export class MongoDBFieldBuilder extends FieldBuilder {
     .node()
   }
 
-  public buildCreatePostRelationalInputFields({ modelName }: Relationship): InputValueDefinitionNode[] {
+  public buildDisconnectRelationalInputField(
+    {
+      modelName,
+      relatedModelName,
+    }: Relationship
+  ): Maybe<InputValueDefinitionNode> {
+    const toMany = this.relationshipManager.isToManyRelationship(relatedModelName, modelName)
+    const namedTypeNode = NamedType.node(
+      toMany
+      ?
+      this.namer.buildWhereUniqueInputName(modelName)
+      :
+      'Boolean'
+    )
+    const typeNode = toMany ? ListType.node(NonNullType.node(namedTypeNode)) : namedTypeNode
+
+    return new InputValueDefinition()
+    .name('disconnect')
+    .type(typeNode)
+    .node()
+  }
+
+  public buildDeleteRelationalInputField(
+    {
+      modelName,
+      relatedModelName,
+    }: Relationship
+  ): Maybe<InputValueDefinitionNode> {
+    const toMany = this.relationshipManager.isToManyRelationship(relatedModelName, modelName)
+    const namedTypeNode = NamedType.node(
+      toMany
+      ?
+      this.namer.buildWhereUniqueInputName(modelName)
+      :
+      'Boolean'
+    )
+    const typeNode = toMany ? ListType.node(NonNullType.node(namedTypeNode)) : namedTypeNode
+
+    return new InputValueDefinition()
+    .name('delete')
+    .type(typeNode)
+    .node()
+  }
+
+  // public buildUpdateRelationalInputField(
+  //   {
+  //     modelName,
+  //     relatedModelName,
+  //   }: Relationship
+  // ): Maybe<InputValueDefinitionNode> {
+  //
+  // }
+
+  public buildCreatePostRelationalInputFields(
+    {
+      modelName,
+      fieldName,
+    }: Relationship
+  ): InputValueDefinitionNode[] {
     const gqlType = this.schema.getType(modelName)
 
     if (gqlType) {
-      const {
-        fields,
-      } = gqlType.astNode as ObjectTypeDefinitionNode
+      const model = gqlType.astNode as ObjectTypeDefinitionNode
 
-      return (fields || []).reduce((
-        fields: InputValueDefinitionNode[],
-        {
-          name: {
-            value: fieldName,
-          },
-        },
-      ) => {
-        return fields
-      }, [])
+      if (model.fields) {
+        return this.buildCreateInputFields(
+          model.fields.filter(field => field.name.value !== fieldName),
+          model,
+        )
+      } else {
+        throw new Error('Model has no fields')
+      }
     } else {
       throw new Error('Model not found in GraphQLSchema')
     }

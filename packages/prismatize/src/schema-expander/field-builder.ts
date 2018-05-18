@@ -42,6 +42,8 @@ export abstract class FieldBuilder {
 
   public abstract buildCreateRelationalInputField(relationship: Relationship): Maybe<InputValueDefinitionNode>
   public abstract buildConnectRelationalInputField(relationship: Relationship): Maybe<InputValueDefinitionNode>
+  public abstract buildDisconnectRelationalInputField(relationship: Relationship): Maybe<InputValueDefinitionNode>
+  public abstract buildDeleteRelationalInputField(relationship: Relationship): Maybe<InputValueDefinitionNode>
   // public abstract buildUpdateRelationalInputField(relationship: Relationship): Maybe<InputValueDefinitionNode>
 
   public abstract buildCreatePostRelationalInputFields(relationship: Relationship): InputValueDefinitionNode[]
