@@ -1,14 +1,16 @@
 import { GraphQLResolveInfo } from 'graphql/type'
+import { IFieldResolver } from 'graphql-tools'
 
 import { Arguments } from '@currentdesk/prismatize'
 
 import { MongoDBWhere } from '../mongodb-where'
+import { MongoDBContext } from '../mongodb-context'
 
 import { mapWhere } from './helpers/map-where'
 import { mapOrderBy } from './helpers/map-order-by'
 import { getProjection } from './helpers/get-projection'
 
-export function find(collectionName: string) {
+export function find(collectionName: string): IFieldResolver<any, MongoDBContext> {
   return (
     source,
     {
@@ -18,11 +20,14 @@ export function find(collectionName: string) {
       first,
       last,
     }: Arguments,
-    { db },
+    {
+      db,
+    }: MongoDBContext,
     info: GraphQLResolveInfo,
-  ) => db.then(db => {
+  ) => db
+  .then(db => db.collection(collectionName))
+  .then(collection => {
     const condition: MongoDBWhere = where ? mapWhere(where) : {}
-    const collection = db.collection(collectionName)
     const count = last ? collection.count({}) : Promise.resolve(0)
     const projection = getProjection(info)
 

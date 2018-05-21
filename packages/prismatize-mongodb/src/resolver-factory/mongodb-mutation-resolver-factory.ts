@@ -12,6 +12,7 @@ import {
   insertOne,
   updateOne,
   deleteOne,
+  insertMany,
 } from './operations'
 
 export class MongoDBMutationResolverFactory extends ResolverFactory {
@@ -36,7 +37,7 @@ export class MongoDBMutationResolverFactory extends ResolverFactory {
       ) => {
         const { namedType } = unwrap(type)
         const collection = tableize(namedType.name.value)
-        const match = name.match(/^([^A-Z]+)/)
+        const match = name.match(/^([^A-Z]+(?:Many)?)/)
 
         if (match) {
           const [ action ] = match
@@ -52,6 +53,18 @@ export class MongoDBMutationResolverFactory extends ResolverFactory {
             }
             case 'delete': {
               resolvers[name] = deleteOne(collection)
+              break
+            }
+            case 'createMany': {
+              resolvers[name] = insertMany(collection)
+              break
+            }
+            case 'updateMany': {
+              resolvers[name] = () => 0
+              break
+            }
+            case 'deleteMany': {
+              resolvers[name] = () => 0
               break
             }
             default: {

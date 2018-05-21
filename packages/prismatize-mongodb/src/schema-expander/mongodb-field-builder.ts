@@ -526,8 +526,8 @@ export class MongoDBFieldBuilder extends FieldBuilder {
     }: Relationship
   ): Maybe<InputValueDefinitionNode> {
     const toMany = this.relationshipManager.isToManyRelationship(relatedModelName, modelName)
-    const namedTypeNode = NonNullType.node(NamedType.node(this.namer.buildCreateInputName(modelName, relatedModelName)))
-    const typeNode = toMany ? ListType.node(namedTypeNode) : namedTypeNode
+    const namedTypeNode = NamedType.node(this.namer.buildCreateInputName(modelName, relatedModelName))
+    const typeNode = toMany ? ListType.node(NonNullType.node(namedTypeNode)) : namedTypeNode
 
     return new InputValueDefinition()
     .name('create')
