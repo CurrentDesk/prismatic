@@ -1,5 +1,5 @@
 export * from './schema-expander'
-export * from './auto-resolver'
+export * from './resolver-factory'
 export * from './maybe'
 
 // import {

@@ -1,9 +1,10 @@
 import { ObjectID } from 'mongodb'
 
-import { Where } from '../../..'
-import { MongoWhere } from '../../.'
+import { Where } from '@currentdesk/prismatize'
 
-export function mapWhere(where: Where): MongoWhere {
+import { MongoDBWhere } from '../../mongodb-where'
+
+export function mapWhere(where: Where): MongoDBWhere {
   return Object.keys(where).reduce((result, key) => {
     let value = where[key]
 
@@ -45,5 +46,5 @@ export function mapWhere(where: Where): MongoWhere {
     }
 
     return result
-  }, {} as MongoWhere)
+  }, {} as MongoDBWhere)
 }

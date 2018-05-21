@@ -1,7 +1,8 @@
 import { ObjectID } from 'mongodb'
 
-import { Where } from '../../..'
-import { MongoWhere } from '../../.'
+import { Where } from '@currentdesk/prismatize'
+
+import { MongoDBWhere } from '../../mongodb-where'
 
 import { mapWhere } from './map-where'
 
@@ -10,7 +11,7 @@ describe('mapWhere', () => {
     const given: Where = {
       foo: 'bar',
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       foo: 'bar',
     }
     expect(mapWhere(given)).toEqual(expected)
@@ -27,7 +28,7 @@ describe('mapWhere', () => {
         },
       ],
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       $and: [
         {
           foo: 'bar',
@@ -51,7 +52,7 @@ describe('mapWhere', () => {
         },
       ],
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       $or: [
         {
           foo: 'bar',
@@ -75,7 +76,7 @@ describe('mapWhere', () => {
         },
       ],
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       $nor: [
         {
           foo: 'bar',
@@ -113,7 +114,7 @@ describe('mapWhere', () => {
         },
       ],
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       $or: [
         {
           $and: [
@@ -146,7 +147,7 @@ describe('mapWhere', () => {
     const given: Where = {
       id: mongoID,
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       _id: mongoID,
     }
     expect(mapWhere(given)).toEqual(expected)
@@ -163,7 +164,7 @@ describe('mapWhere', () => {
         },
       ]
     }
-    const expected: MongoWhere = {
+    const expected: MongoDBWhere = {
       $and: [
         {
           foo: {

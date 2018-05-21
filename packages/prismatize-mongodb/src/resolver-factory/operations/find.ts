@@ -1,7 +1,8 @@
 import { GraphQLResolveInfo } from 'graphql/type'
 
-import { Arguments } from '../..'
-import { MongoWhere } from '../.'
+import { Arguments } from '@currentdesk/prismatize'
+
+import { MongoDBWhere } from '../mongodb-where'
 
 import { mapWhere } from './helpers/map-where'
 import { mapOrderBy } from './helpers/map-order-by'
@@ -20,7 +21,7 @@ export function find(collectionName: string) {
     { db },
     info: GraphQLResolveInfo,
   ) => db.then(db => {
-    const condition: MongoWhere = where ? mapWhere(where) : {}
+    const condition: MongoDBWhere = where ? mapWhere(where) : {}
     const collection = db.collection(collectionName)
     const count = last ? collection.count({}) : Promise.resolve(0)
     const projection = getProjection(info)

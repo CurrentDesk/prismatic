@@ -15,7 +15,7 @@ import { tableize } from 'inflected'
 
 import { getNamedType } from '@currentdesk/graphql-ast'
 
-import { MongoContext } from '..'
+import { MongoDBContext } from '../mongodb-context'
 
 import { mapWhere } from './helpers/map-where'
 
@@ -38,7 +38,7 @@ function fieldsOfInput(type: TypeNode, schema: GraphQLSchema) {
   }
 }
 
-export function insertOne(collectionName: string): GraphQLFieldResolver<object, MongoContext, Args> {
+export function insertOne(collectionName: string): GraphQLFieldResolver<object, MongoDBContext, Args> {
   return (
     source,
     { data },
