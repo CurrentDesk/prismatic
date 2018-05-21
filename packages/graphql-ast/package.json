@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/graphql-ast",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Builders and helpers for GraphQL AST manipulation.",
   "author": "TJ Peden <tj.peden@currentdesk.com>",
   "contributors": [
