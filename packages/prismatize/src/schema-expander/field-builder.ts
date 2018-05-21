@@ -1,5 +1,6 @@
 import {
   FieldDefinitionNode,
+  EnumValueDefinitionNode,
   ObjectTypeDefinitionNode,
   InputValueDefinitionNode,
 } from 'graphql/language'
@@ -31,6 +32,8 @@ export abstract class FieldBuilder {
   public abstract buildCreateManyField(model: ObjectTypeDefinitionNode): Maybe<FieldDefinitionNode>
   public abstract buildUpdateManyField(model: ObjectTypeDefinitionNode): Maybe<FieldDefinitionNode>
   public abstract buildDeleteManyField(model: ObjectTypeDefinitionNode): Maybe<FieldDefinitionNode>
+
+  public abstract buildOrderByInputFields(fields: ReadonlyArray<FieldDefinitionNode>): EnumValueDefinitionNode[]
 
   public abstract buildWhereInputLogicalFields(name: string): InputValueDefinitionNode[]
 

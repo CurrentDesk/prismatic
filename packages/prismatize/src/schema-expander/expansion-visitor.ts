@@ -1,8 +1,8 @@
 import {
   DocumentNode,
+  DefinitionNode,
   FieldDefinitionNode,
   ObjectTypeDefinitionNode,
-  InputObjectTypeDefinitionNode,
 } from 'graphql/language'
 import {
   ap,
@@ -98,7 +98,10 @@ export class ExpansionVisitor {
     .node()
   }
 
-  private buildInputs(): InputObjectTypeDefinitionNode[] {
+  private buildInputs(): DefinitionNode[] {
+    const buildOrderByForModels = chainBuilders([
+      (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildOrderByInput(model),
+    ])
     const buildInputsForModels = chainBuilders([
       (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildWhereInput(model),
       (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildCreateInput(model),
@@ -109,10 +112,11 @@ export class ExpansionVisitor {
       (relationship: Relationship) => this.inputBuilder.buildCreateRelationalInput(relationship),
       (relationship: Relationship) => this.inputBuilder.buildUpdateRelationalInput(relationship),
       (relationship: Relationship) => this.inputBuilder.buildCreatePostRelationalInput(relationship),
-      (relationship: Relationship) => this.inputBuilder.buildUpdatePostRelationalInput(relationship),
+      // (relationship: Relationship) => this.inputBuilder.buildUpdatePostRelationalInput(relationship),
     ])
 
     return [
+      ...buildOrderByForModels(this.models),
       ...buildInputsForModels(this.models),
       ...buildInputsForRelationships(this.relationshipManager.allRelationships)
     ]
@@ -140,6 +144,7 @@ export class ExpansionVisitor {
         (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildCreateItemField(model),
         (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildUpdateItemField(model),
         (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildDeleteItemField(model),
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildCreateManyField(model),
         (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildUpdateManyField(model),
         (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildDeleteManyField(model),
       ])

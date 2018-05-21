@@ -1,4 +1,5 @@
 import {
+  EnumTypeDefinitionNode,
   ObjectTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
 } from 'graphql/language'
@@ -19,6 +20,8 @@ export abstract class InputBuilder {
     protected fieldBuilder: FieldBuilder,
     protected relationshipManager: RelationshipManager,
   ) {}
+
+  public abstract buildOrderByInput(model: ObjectTypeDefinitionNode): Maybe<EnumTypeDefinitionNode>
 
   public abstract buildWhereInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode>
   public abstract buildWhereUniqueInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode>
