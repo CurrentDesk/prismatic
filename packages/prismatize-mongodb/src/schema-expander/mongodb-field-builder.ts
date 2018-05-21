@@ -1,5 +1,6 @@
 import {
   FieldDefinitionNode,
+  EnumValueDefinitionNode,
   ObjectTypeDefinitionNode,
   InputValueDefinitionNode,
 } from 'graphql/language'
@@ -24,11 +25,13 @@ import {
 } from '@currentdesk/prismatize'
 import {
   unwrap,
+  getNamedType,
   hasDirective,
   ListType,
   NamedType,
   NonNullType,
   FieldDefinition,
+  EnumValueDefinition,
   InputValueDefinition,
 } from '@currentdesk/graphql-ast'
 
@@ -89,6 +92,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
       return new FieldDefinition()
       .name(`create${name}`)
       .arguments(() => this.argumentsBuilder.buildCreateArguments(name))
+      .type(NonNullType.node(NamedType.node(name)))
       .node()
     }
   }
@@ -105,6 +109,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
       return new FieldDefinition()
       .name(`update${name}`)
       .arguments(() => this.argumentsBuilder.buildUpdateArguments(name))
+      .type(NamedType.node(name))
       .node()
     }
   }
@@ -121,6 +126,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
       return new FieldDefinition()
       .name(`delete${name}`)
       .arguments(() => this.argumentsBuilder.buildDeleteArguments(name))
+      .type(NamedType.node(name))
       .node()
     }
   }
@@ -137,6 +143,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
       return new FieldDefinition()
       .name(`createMany${name}`)
       .arguments(() => this.argumentsBuilder.buildCreateManyArguments(name))
+      .type(NamedType.node('Int'))
       .node()
     }
   }
@@ -153,6 +160,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
       return new FieldDefinition()
       .name(`updateMany${name}`)
       .arguments(() => this.argumentsBuilder.buildUpdateManyArguments(name))
+      .type(NamedType.node('Int'))
       .node()
     }
   }
@@ -169,8 +177,31 @@ export class MongoDBFieldBuilder extends FieldBuilder {
       return new FieldDefinition()
       .name(`deleteMany${name}`)
       .arguments(() => this.argumentsBuilder.buildDeleteManyArguments(name))
+      .type(NamedType.node('Int'))
       .node()
     }
+  }
+
+  public buildOrderByInputFields(fields: ReadonlyArray<FieldDefinitionNode>): EnumValueDefinitionNode[] {
+    return fields
+    .filter(field => {
+      const gqlType = typeFromAST(this.schema, getNamedType(field.type))
+
+      return gqlType !== undefined && isInputType(gqlType)
+    })
+    .reduce((
+      values,
+      {
+        name: {
+          value: name,
+        },
+      }
+    ) => {
+      return values.concat(
+        new EnumValueDefinition().name(`${name}_ASC`).node(),
+        new EnumValueDefinition().name(`${name}_DESC`).node(),
+      )
+    }, [] as EnumValueDefinitionNode[])
   }
 
   public buildWhereInputLogicalFields(name: string): InputValueDefinitionNode[] {

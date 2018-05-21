@@ -1,4 +1,5 @@
 import {
+  EnumTypeDefinitionNode,
   ObjectTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
 } from 'graphql/language'
@@ -12,12 +13,31 @@ import {
   Relationship,
   InputBuilder,
 } from '@currentdesk/prismatize'
-import { InputObjectTypeDefinition } from '@currentdesk/graphql-ast'
+import {
+  EnumTypeDefinition,
+  InputObjectTypeDefinition,
+} from '@currentdesk/graphql-ast'
 
 type RejectNil = <T>(items: Maybe<T>[]) => T[]
 const rejectNil: RejectNil = reject(isNil)
 
 export class MongoDBInputBuilder extends InputBuilder {
+  public buildOrderByInput(model: ObjectTypeDefinitionNode): Maybe<EnumTypeDefinitionNode> {
+    const {
+      name: {
+        value: modelName,
+      },
+      fields,
+    } = model
+
+    if (fields) {
+      return new EnumTypeDefinition()
+      .name(this.namer.buildOrderByInputName(modelName))
+      .values(() => this.fieldBuilder.buildOrderByInputFields(fields))
+      .node()
+    }
+  }
+
   public buildWhereInput(model: ObjectTypeDefinitionNode): Maybe<InputObjectTypeDefinitionNode> {
     const {
       name: {
