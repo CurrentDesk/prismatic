@@ -1,6 +1,12 @@
 import { ObjectTypeDefinitionNode } from 'graphql/language'
 import { IResolvers } from 'graphql-tools'
-// import { GraphQLSchema } from 'graphql/type'
+import {
+  DateTime,
+  EmailAddress,
+  URL,
+  PhoneNumber,
+  PostalCode,
+} from '@okgrow/graphql-scalars'
 
 import { ResolverFactory } from './resolver-factory'
 
@@ -11,9 +17,14 @@ export class ResolverFactoryVisitor {
     protected modelResolverFactory: ResolverFactory,
     protected queryResolverFactory: ResolverFactory,
     protected mutationResolverFactory: ResolverFactory,
-    // protected schema: GraphQLSchema,
   ) {
-    this.resolvers = {}
+    this.resolvers = {
+      DateTime,
+      EmailAddress,
+      URL,
+      PhoneNumber,
+      PostalCode,
+    }
   }
 
   public ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
