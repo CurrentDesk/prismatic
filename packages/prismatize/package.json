@@ -8,10 +8,9 @@
   ],
   "license": "MIT",
   "main": "dist/src/index.js",
-  "typings": "./dist/src/index.d.ts",
+  "typings": "dist/src/index.d.ts",
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "repository": {
     "type": "git",

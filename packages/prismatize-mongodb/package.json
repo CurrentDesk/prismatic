@@ -7,6 +7,9 @@
     "Patrick Reames <patrick.reames@currentdesk.com"
   ],
   "license": "MIT",
+  "bin": {
+    "pz-mongodb": "dist/src/bin.js"
+  },
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "files": [
