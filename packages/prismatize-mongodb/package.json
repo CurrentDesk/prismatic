@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/prismatize-mongodb",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A node library that converts your MongoDB database into a GraphQL API like Prisma.",
   "author": "TJ Peden <tj.peden@currentdesk.com>",
   "contributors": [
