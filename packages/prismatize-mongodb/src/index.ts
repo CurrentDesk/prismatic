@@ -1,2 +1,2 @@
-export * from './schema-expander'
-export * from './resolver-factory'
+export { MongoDBSchemaExpander } from './schema-expander'
+export { MongoDBAutoExecutableSchemaFactory } from './resolver-factory'

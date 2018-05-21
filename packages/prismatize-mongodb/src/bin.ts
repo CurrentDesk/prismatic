@@ -3,10 +3,10 @@ import { resolve } from 'path'
 
 import * as program from 'commander'
 import { importSchema } from 'graphql-import'
+import { GraphQLServer } from 'graphql-yoga'
 
-import {
-  MongoDBSchemaExpander,
-} from './schema-expander'
+import { MongoDBSchemaExpander } from './schema-expander'
+import { MongoDBAutoExecutableSchemaFactory } from './resolver-factory'
 
 process.title = 'pzmongo'
 
@@ -27,6 +27,17 @@ program
   } else {
     console.log(typeDefs)
   }
+})
+
+program
+.command('serve <input>')
+.action((input) => {
+  const models = importSchema(input)
+  const typeDefs = new MongoDBSchemaExpander(models).expand()
+  const schema = new MongoDBAutoExecutableSchemaFactory(typeDefs).makeExecutableSchema()
+  const server = new GraphQLServer({ schema })
+
+  server.start(() => console.log('Server is running on localhost:4000'))
 })
 
 program.parse(process.argv)
