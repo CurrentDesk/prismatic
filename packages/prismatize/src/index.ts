@@ -1,3 +1,7 @@
+export * from './schema-expander'
+export * from './auto-resolver'
+export * from './maybe'
+
 // import {
 //   print,
 //   DefinitionNode,
@@ -11,8 +15,6 @@
 //   InputValueDefinition,
 // } from './builders'
 
-export * from './schema-expander'
-export * from './auto-resolver'
 // export * from './utilities'
 // export * from './builders'
 

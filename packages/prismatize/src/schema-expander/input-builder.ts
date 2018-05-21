@@ -4,7 +4,7 @@ import {
 } from 'graphql/language'
 import { GraphQLSchema } from 'graphql/type'
 
-import { Maybe } from './maybe'
+import { Maybe } from '../maybe'
 import { Namer } from './namer'
 import { FieldBuilder } from './field-builder'
 import {

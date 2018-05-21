@@ -13,7 +13,7 @@ import {
   isWrappingType,
 } from '@currentdesk/graphql-ast'
 
-import { Maybe } from './maybe'
+import { Maybe } from '../maybe'
 
 export interface Relationship {
   modelName: string

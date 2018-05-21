@@ -4,7 +4,6 @@ import {
   ObjectTypeDefinitionNode,
   InputObjectTypeDefinitionNode,
 } from 'graphql/language'
-import { GraphQLSchema } from 'graphql/type'
 import {
   ap,
   path,
@@ -30,6 +29,7 @@ import {
 import { ArgumentsBuilder } from './arguments-builder'
 import { FieldBuilder } from './field-builder'
 import { InputBuilder } from './input-builder'
+import { Maybe } from '../maybe'
 
 const definitionOrder = [
   'ScalarTypeDefinition',
@@ -38,15 +38,10 @@ const definitionOrder = [
   'ObjectTypeDefinition',
 ]
 
-type ModelBuilder<T> = (node: ObjectTypeDefinitionNode) => T | undefined
-type ModelsBuildFn<T> = (nodes: ObjectTypeDefinitionNode[]) => T[]
+type Builder<I, T> = (item: I) => Maybe<T>
+type BuildAll<I, T> = (items: I[]) => T[]
 
-const chainBuildersForModels = <T>(builders: ModelBuilder<T>[]): ModelsBuildFn<T> => pipe(ap(builders), reject(isNil))
-
-type RelationshipBuilder<T> = (relationship: Relationship) => T | undefined
-type RelationshipsBuildFn<T> = (relationships: Relationship[]) => T[]
-
-const chainBuildersForRelationships = <T>(builders: RelationshipBuilder<T>[]): RelationshipsBuildFn<T> => pipe(ap(builders), reject(isNil))
+const chainBuilders = <I, T>(builders: Builder<I, T>[]): BuildAll<I, T> => pipe(ap(builders), reject(isNil))
 
 export class ExpansionVisitor {
   public Document: any = {}
@@ -58,7 +53,6 @@ export class ExpansionVisitor {
     private fieldBuilder: FieldBuilder,
     private inputBuilder: InputBuilder,
     private relationshipManager: RelationshipManager,
-    protected schema: GraphQLSchema
   ) {
     this.models = []
 
@@ -83,7 +77,7 @@ export class ExpansionVisitor {
   public UnionTypeExtension() { return null }
   public EnumTypeExtension() { return null }
 
-  private build(node: DocumentNode) {
+  private build(node: DocumentNode): DocumentNode {
     const inputs = this.buildInputs()
 
     return new Document(node)
@@ -105,17 +99,17 @@ export class ExpansionVisitor {
   }
 
   private buildInputs(): InputObjectTypeDefinitionNode[] {
-    const buildInputsForModels = chainBuildersForModels([
-      (node) => this.inputBuilder.buildWhereInput(node),
-      (node) => this.inputBuilder.buildCreateInput(node),
-      (node) => this.inputBuilder.buildUpdateInput(node),
-      (node) => this.inputBuilder.buildWhereUniqueInput(node),
+    const buildInputsForModels = chainBuilders([
+      (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildWhereInput(model),
+      (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildCreateInput(model),
+      (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildUpdateInput(model),
+      (model: ObjectTypeDefinitionNode) => this.inputBuilder.buildWhereUniqueInput(model),
     ])
-    const buildInputsForRelationships = chainBuildersForRelationships([
-      (relationship) => this.inputBuilder.buildCreateRelationalInput(relationship),
-      (relationship) => this.inputBuilder.buildUpdateRelationalInput(relationship),
-      (relationship) => this.inputBuilder.buildCreatePostRelationalInput(relationship),
-      (relationship) => this.inputBuilder.buildUpdatePostRelationalInput(relationship),
+    const buildInputsForRelationships = chainBuilders([
+      (relationship: Relationship) => this.inputBuilder.buildCreateRelationalInput(relationship),
+      (relationship: Relationship) => this.inputBuilder.buildUpdateRelationalInput(relationship),
+      (relationship: Relationship) => this.inputBuilder.buildCreatePostRelationalInput(relationship),
+      (relationship: Relationship) => this.inputBuilder.buildUpdatePostRelationalInput(relationship),
     ])
 
     return [
@@ -128,9 +122,9 @@ export class ExpansionVisitor {
     return new ObjectTypeDefinition()
     .name('Query')
     .fields(() => {
-      const buildQueryFieldsForModels = chainBuildersForModels([
-        (node) => this.fieldBuilder.buildReadManyField(node),
-        (node) => this.fieldBuilder.buildReadItemField(node),
+      const buildQueryFieldsForModels = chainBuilders([
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildReadManyField(model),
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildReadItemField(model),
       ])
 
       return buildQueryFieldsForModels(this.models)
@@ -142,12 +136,12 @@ export class ExpansionVisitor {
     return new ObjectTypeDefinition()
     .name('Mutation')
     .fields(() => {
-      const buildMutationFieldsForModels = chainBuildersForModels([
-        (node) => this.fieldBuilder.buildCreateItemField(node),
-        (node) => this.fieldBuilder.buildUpdateItemField(node),
-        (node) => this.fieldBuilder.buildDeleteItemField(node),
-        (node) => this.fieldBuilder.buildUpdateManyField(node),
-        (node) => this.fieldBuilder.buildDeleteManyField(node),
+      const buildMutationFieldsForModels = chainBuilders([
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildCreateItemField(model),
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildUpdateItemField(model),
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildDeleteItemField(model),
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildUpdateManyField(model),
+        (model: ObjectTypeDefinitionNode) => this.fieldBuilder.buildDeleteManyField(model),
       ])
 
       return buildMutationFieldsForModels(this.models)
