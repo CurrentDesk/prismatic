@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/prismatize",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A node library that converts your database into a GraphQL API like Prisma.",
   "author": "TJ Peden <tj.peden@currentdesk.com>",
   "contributors": [
