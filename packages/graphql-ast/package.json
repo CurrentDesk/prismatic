@@ -1,9 +1,10 @@
 {
   "name": "@currentdesk/graphql-ast",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Builders and helpers for GraphQL AST manipulation.",
-  "author": "TJ Peden <tj.peden@currentdesk.com>",
+  "author": "The Prismatize Team",
   "contributors": [
+    "TJ Peden <tj.peden@currentdesk.com>",
     "Patrick Reames <patrick.reames@currentdesk.com"
   ],
   "license": "MIT",
