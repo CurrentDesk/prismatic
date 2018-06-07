@@ -17,8 +17,10 @@ export function insertMany(collectionName: string): IFieldResolver<any, MongoDBC
       db,
     }: MongoDBContext,
     info: GraphQLResolveInfo,
-  ) => db
-  .then(db => db.collection(collectionName))
-  .then(collection => collection.insertMany(data))
-  .then(({ insertedCount }) => insertedCount)
+  ) => {
+    return db
+    .then(db => db.collection(collectionName))
+    .then(collection => collection.insertMany(data))
+    .then(({ insertedCount }) => insertedCount)
+  }
 }

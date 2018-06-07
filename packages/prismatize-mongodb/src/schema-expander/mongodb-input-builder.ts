@@ -14,6 +14,7 @@ import {
   InputBuilder,
 } from '@currentdesk/prismatize'
 import {
+  hasDirective,
   EnumTypeDefinition,
   InputObjectTypeDefinition,
 } from '@currentdesk/graphql-ast'
@@ -28,9 +29,10 @@ export class MongoDBInputBuilder extends InputBuilder {
         value: modelName,
       },
       fields,
+      directives,
     } = model
 
-    if (fields) {
+    if (fields && !hasDirective(directives, 'embedded')) {
       return new EnumTypeDefinition()
       .name(this.namer.buildOrderByInputName(modelName))
       .values(() => this.fieldBuilder.buildOrderByInputFields(fields))
