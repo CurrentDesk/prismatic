@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/prismatize-mongodb",
-  "version": "0.1.16-4",
+  "version": "0.1.16-5",
   "description": "A node library that converts your MongoDB database into a GraphQL API like Prisma.",
   "author": "The Prismatize Team",
   "contributors": [
@@ -32,8 +32,8 @@
     "prepublishOnly": "yarn clean && yarn build"
   },
   "dependencies": {
-    "@currentdesk/graphql-ast": "^0.1.16-4",
-    "@currentdesk/prismatize": "^0.1.16-4",
+    "@currentdesk/graphql-ast": "^0.1.16-5",
+    "@currentdesk/prismatize": "^0.1.16-5",
     "commander": "^2.15.1",
     "graphql-tools": "^3.0.1",
     "graphql-yoga": "^1.14.0",
