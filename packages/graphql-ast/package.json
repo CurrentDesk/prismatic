@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/graphql-ast",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Builders and helpers for GraphQL AST manipulation.",
   "author": "The Prismatize Team",
   "contributors": [
@@ -23,8 +23,8 @@
   "homepage": "https://github.com/CurrentDesk/prismatize#readme",
   "private": false,
   "scripts": {
-    "build": "tsc -d -p .",
-    "build:watch": "tsc -d -p . --watch",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn clean && yarn build"
   },
