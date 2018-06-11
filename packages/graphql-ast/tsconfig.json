@@ -2,8 +2,9 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "preserveConstEnums": true,
-    "noUnusedLocals": true,
     "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "declaration": true,
     "sourceMap": true,
     "target": "es5",
     "rootDir": ".",

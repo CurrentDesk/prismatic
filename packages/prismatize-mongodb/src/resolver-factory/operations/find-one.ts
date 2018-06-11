@@ -4,8 +4,10 @@ import { Arguments } from '@currentdesk/prismatize'
 
 import { MongoDBWhere } from '../mongodb-where'
 
-import { mapWhere } from './helpers/map-where'
-import { getProjection } from './helpers/get-projection'
+import {
+  mapWhere,
+  getProjection,
+} from './helpers'
 
 export function findOne(collectionName: string) {
   return (

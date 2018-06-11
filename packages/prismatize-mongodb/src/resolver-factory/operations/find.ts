@@ -6,9 +6,11 @@ import { Arguments } from '@currentdesk/prismatize'
 import { MongoDBWhere } from '../mongodb-where'
 import { MongoDBContext } from '../mongodb-context'
 
-import { mapWhere } from './helpers/map-where'
-import { mapOrderBy } from './helpers/map-order-by'
-import { getProjection } from './helpers/get-projection'
+import {
+  mapWhere,
+  mapOrderBy,
+  getProjection,
+} from './helpers'
 
 export function find(collectionName: string): IFieldResolver<any, MongoDBContext> {
   return (

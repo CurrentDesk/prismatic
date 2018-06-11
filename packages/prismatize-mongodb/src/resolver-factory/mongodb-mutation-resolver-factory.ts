@@ -16,15 +16,7 @@ import {
 } from './operations'
 
 export class MongoDBMutationResolverFactory extends ResolverFactory {
-  public build(
-    {
-      name: {
-        value: modelName,
-      },
-      fields,
-      directives: modelDirectives,
-    }: ObjectTypeDefinitionNode
-  ): Maybe<IResolverObject> {
+  public build({ fields }: ObjectTypeDefinitionNode): Maybe<IResolverObject> {
     if (fields) {
       return fields.reduce((
         resolvers: IResolverObject,
@@ -44,7 +36,7 @@ export class MongoDBMutationResolverFactory extends ResolverFactory {
 
           switch (action) {
             case 'create': {
-              resolvers[name] = insertOne(collection)
+              resolvers[name] = insertOne(namedType.name.value, this.relationshipManager)
               break
             }
             case 'update': {

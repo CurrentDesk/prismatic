@@ -10,10 +10,13 @@ import {
   assertResolveFunctionsPresent,
 } from 'graphql-tools'
 
+import { RelationshipManager } from '../relationship-manager'
+
 import { ResolverFactory } from './resolver-factory'
 import { ResolverFactoryVisitor } from './resolver-factory-visitor'
 
 export abstract class AutoExecutableSchemaFactory {
+  protected relationshipManager: RelationshipManager
   protected modelResolverFactory: ResolverFactory
   protected queryResolverFactory: ResolverFactory
   protected mutationResolverFactory: ResolverFactory
@@ -25,6 +28,8 @@ export abstract class AutoExecutableSchemaFactory {
   public constructor(typeDefs: string) {
     this.ast = parse(typeDefs, { noLocation: true })
     this.schema = buildASTSchema(this.ast)
+
+    this.relationshipManager = new RelationshipManager(this.schema)
   }
 
   public makeExecutableSchema(): GraphQLSchema {
@@ -33,6 +38,7 @@ export abstract class AutoExecutableSchemaFactory {
       this.modelResolverFactory,
       this.queryResolverFactory,
       this.mutationResolverFactory,
+      this.relationshipManager,
     )
 
     visit(this.ast, visitor)

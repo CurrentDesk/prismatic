@@ -11,7 +11,7 @@ import { FieldBuilder } from './field-builder'
 import {
   Relationship,
   RelationshipManager,
-} from './relationship-manager'
+} from '../relationship-manager'
 
 export abstract class InputBuilder {
   public constructor(

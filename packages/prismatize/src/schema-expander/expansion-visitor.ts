@@ -22,14 +22,15 @@ import {
   ObjectTypeDefinition,
 } from '@currentdesk/graphql-ast'
 
+import { Maybe } from '../maybe'
 import {
   Relationship,
   RelationshipManager,
-} from './relationship-manager'
+} from '../relationship-manager'
+
 import { ArgumentsBuilder } from './arguments-builder'
 import { FieldBuilder } from './field-builder'
 import { InputBuilder } from './input-builder'
-import { Maybe } from '../maybe'
 
 const definitionOrder = [
   'ScalarTypeDefinition',

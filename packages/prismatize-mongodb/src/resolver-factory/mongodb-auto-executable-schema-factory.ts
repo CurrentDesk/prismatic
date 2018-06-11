@@ -8,8 +8,17 @@ export class MongoDBAutoExecutableSchemaFactory extends AutoExecutableSchemaFact
   public constructor(typeDefs: string) {
     super(typeDefs)
 
-    this.modelResolverFactory = new MongoDBModelResolverFactory(this.schema)
-    this.queryResolverFactory = new MongoDBQueryResolverFactory(this.schema)
-    this.mutationResolverFactory = new MongoDBMutationResolverFactory(this.schema)
+    this.modelResolverFactory = new MongoDBModelResolverFactory(
+      this.schema,
+      this.relationshipManager,
+    )
+    this.queryResolverFactory = new MongoDBQueryResolverFactory(
+      this.schema,
+      this.relationshipManager,
+    )
+    this.mutationResolverFactory = new MongoDBMutationResolverFactory(
+      this.schema,
+      this.relationshipManager,
+    )
   }
 }

@@ -7,12 +7,13 @@ import {
 import { GraphQLSchema } from 'graphql/type'
 
 import { Maybe } from '../maybe'
-import { Namer } from './namer'
-import { ArgumentsBuilder } from './arguments-builder'
 import {
   Relationship,
   RelationshipManager,
-} from './relationship-manager'
+} from '../relationship-manager'
+
+import { Namer } from './namer'
+import { ArgumentsBuilder } from './arguments-builder'
 
 export abstract class FieldBuilder {
   public constructor(

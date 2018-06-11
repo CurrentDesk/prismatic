@@ -64,19 +64,26 @@ export class MongoDBModelResolverFactory extends ResolverFactory {
               if (isObjectType(gqlType) && !hasDirective(directives, 'embedded')) {
                 resolvers[name] = (source, args, context, info) => {
                   console.log(name, source[name], source)
-                  if (source[name] !== undefined && source[name] !== null) {
-                    if (list) {
-                      Object.assign(args, { where: { id_in: source[name] } })
+                  if (list) {
+                    const relationship = this.relationshipManager.findRelationship(namedType.name.value, modelName)
+
+                    if (relationship) {
+                      const { fieldName } = relationship
+                      Object.assign(args, { where: { [fieldName]: source._id } })
 
                       return find(collection)(null, args, context, info)
+                    } else {
+                      throw new Error(`No inverse relationship found for ${modelName} to many ${namedType.name.value}`)
                     }
+                  }
 
+                  if (source[name] !== undefined && source[name] !== null) {
                     Object.assign(args, { where: { id: source[name] } })
 
                     return findOne(collection)(null, args, context, info)
                   }
 
-                  return list ? [] : null
+                  return null
                 }
               }
             }

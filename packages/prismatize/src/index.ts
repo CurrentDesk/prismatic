@@ -1,3 +1,4 @@
+export * from './relationship-manager'
 export * from './schema-expander'
 export * from './resolver-factory'
 export * from './maybe'

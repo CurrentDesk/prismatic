@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql/type'
 
-import { mapWhere } from './helpers/map-where'
+import { mapWhere } from './helpers'
 
 function isObject(value) {
   return value && typeof value === 'object' && value.constructor === Object

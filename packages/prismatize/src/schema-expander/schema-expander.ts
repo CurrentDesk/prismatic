@@ -7,8 +7,9 @@ import {
 import { GraphQLSchema } from 'graphql/type'
 import { buildASTSchema } from 'graphql/utilities'
 
+import { RelationshipManager } from '../relationship-manager'
+
 import { ExpansionVisitor } from './expansion-visitor'
-import { RelationshipManager } from './relationship-manager'
 import { ArgumentsBuilder } from './arguments-builder'
 import { FieldBuilder } from './field-builder'
 import { InputBuilder } from './input-builder'
