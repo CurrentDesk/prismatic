@@ -3,6 +3,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "script": {
+    "build": "lerna exec --bail=false -- yarn build",
+    "deploy": "lerna publish --access public"
+  },
   "devDependencies": {
     "lerna": "^2.10.2"
   },
