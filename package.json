@@ -5,7 +5,7 @@
   ],
   "script": {
     "build": "lerna exec --bail=false -- yarn build",
-    "deploy": "lerna publish --access public"
+    "deploy": "lerna publish"
   },
   "devDependencies": {
     "lerna": "^2.10.2"

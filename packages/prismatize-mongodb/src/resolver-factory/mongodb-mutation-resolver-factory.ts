@@ -48,7 +48,7 @@ export class MongoDBMutationResolverFactory extends ResolverFactory {
               break
             }
             case 'createMany': {
-              resolvers[name] = insertMany(collection)
+              resolvers[name] = insertMany(namedType.name.value, this.relationshipManager)
               break
             }
             case 'updateMany': {
