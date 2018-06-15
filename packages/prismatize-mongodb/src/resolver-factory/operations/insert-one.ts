@@ -36,7 +36,6 @@ function fieldsOfInput(type: TypeNode, schema: GraphQLSchema) {
   } = getNamedType(type)
   const gqlType = schema.getType(name)
   if (gqlType && ((process.env.NODE_ENV === 'production' && isInputObjectType(gqlType)) || gqlType.constructor.name === GraphQLInputObjectType.name)) {
-    console.dir(gqlType)
     const { astNode } = gqlType
     const { fields } = astNode as InputObjectTypeDefinitionNode
 
@@ -62,7 +61,7 @@ export function insertOne(
     }: GraphQLResolveInfo
   ) => {
     const toOnes: string[] = []
-    const toManys: { key: string, value: any}[] = []
+    const toManys: { key: string, value: any }[] = []
 
     Object.entries(data).forEach(([key, value]) => {
       if (value != null && (value.create != null || value.connect != null)) {
@@ -82,13 +81,13 @@ export function insertOne(
     return db.then(db => {
       const queries = toOnes.map(key => {
         const value = data[key]
-        const [ { type } ] = variableDefinitions as VariableDefinitionNode[]
+        const [{ type }] = variableDefinitions as VariableDefinitionNode[]
         const fields = fieldsOfInput(type, schema)
 
         if (fields) {
           const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
           const { name: { value: name } } = getNamedType(type)
-          const [ match ] = name.match(/^[A-Z][a-z]+/) as string[]
+          const [match] = name.match(/^[A-Z][a-z]+/) as string[]
           const collection = db.collection(tableize(match))
 
           if ('create' in value) {
@@ -112,66 +111,66 @@ export function insertOne(
       })
 
       return Promise.all(queries)
-      .then(() => {
-        const collection = db.collection(collectionName)
+        .then(() => {
+          const collection = db.collection(collectionName)
 
-        data['createdAt'] = new Date(Date.now())
-        data['updatedAt'] = new Date(Date.now())
+          data['createdAt'] = new Date(Date.now())
+          data['updatedAt'] = new Date(Date.now())
 
-        // console.log('data:', JSON.stringify(data, null, 2))
-        return collection.insertOne(data)
-        .then(({
-          insertedId,
-          ops: [result]
-        }) => {
-          console.log(result)
-          const queries = toManys.map(({ key, value }) => {
-            const [ { type } ] = variableDefinitions as VariableDefinitionNode[]
-            const fields = fieldsOfInput(type, schema)
+          // console.log('data:', JSON.stringify(data, null, 2))
+          return collection.insertOne(data)
+            .then(({
+              insertedId,
+              ops: [result]
+            }) => {
+              console.log(result)
+              const queries = toManys.map(({ key, value }) => {
+                const [{ type }] = variableDefinitions as VariableDefinitionNode[]
+                const fields = fieldsOfInput(type, schema)
 
-            if (fields) {
-              const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
-              const { name: { value: name } } = getNamedType(type)
-              const [ match ] = name.match(/^[A-Z][a-z]+/) as string[]
-              const collection = db.collection(tableize(match))
+                if (fields) {
+                  const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
+                  const { name: { value: name } } = getNamedType(type)
+                  const [match] = name.match(/^[A-Z][a-z]+/) as string[]
+                  const collection = db.collection(tableize(match))
 
-              if ('create' in value) {
-                let { create } = value
+                  if ('create' in value) {
+                    let { create } = value
 
-                create = create.map(item => {
-                  Object.keys(item).forEach(related => {
-                    const relationship = relationshipManager.findRelationship(name, relatedModelName)
+                    create = create.map(item => {
+                      Object.keys(item).forEach(related => {
+                        const relationship = relationshipManager.findRelationship(name, relatedModelName)
 
-                    if (relationship) {
-                      const { fieldName } = relationship
+                        if (relationship) {
+                          const { fieldName } = relationship
 
-                      item[related][fieldName] = insertedId
-                    }
-                  })
-                })
-                .map(mapWhere)
+                          item[related][fieldName] = insertedId
+                        }
+                      })
+                    })
+                      .map(mapWhere)
 
-                return collection.insertMany(create).then(({ insertedIds, insertedCount }) => {
-                  data[key] = insertedId
-                })
-              }
+                    return collection.insertMany(create).then(({ insertedIds, insertedCount }) => {
+                      data[key] = insertedId
+                    })
+                  }
 
-              if ('connect' in value) {
-                const { connect } = value
+                  if ('connect' in value) {
+                    const { connect } = value
 
-                return collection.findOne(connect.map(mapWhere)).then(({ _id }) => {
-                  data[key] = _id
-                })
-              }
-            } else {
-              throw new Error(`Schema is missing fields for ${relatedModelName}`)
-            }
-          })
+                    return collection.findOne(connect.map(mapWhere)).then(({ _id }) => {
+                      data[key] = _id
+                    })
+                  }
+                } else {
+                  throw new Error(`Schema is missing fields for ${relatedModelName}`)
+                }
+              })
 
-          return Promise.all(queries).then(() => result)
+              return Promise.all(queries).then(() => result)
+            })
+            .catch(console.log)
         })
-        .catch(console.log)
-      })
     })
   }
 }

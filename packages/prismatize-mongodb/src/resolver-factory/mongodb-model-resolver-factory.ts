@@ -63,7 +63,6 @@ export class MongoDBModelResolverFactory extends ResolverFactory {
             default: {
               if (isObjectType(gqlType) && !hasDirective(directives, 'embedded')) {
                 resolvers[name] = (source, args, context, info) => {
-                  console.log(name, source[name], source)
                   if (list) {
                     const relationship = this.relationshipManager.findRelationship(namedType.name.value, modelName)
 
