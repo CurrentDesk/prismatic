@@ -3,8 +3,10 @@
   "workspaces": [
     "packages/*"
   ],
-  "script": {
-    "build": "lerna exec --bail=false -- yarn build",
+  "scripts": {
+    "clean": "lerna run --stream clean",
+    "build": "lerna run --stream build",
+    "watch": "lerna run --parallel build:watch",
     "deploy": "lerna publish"
   },
   "devDependencies": {

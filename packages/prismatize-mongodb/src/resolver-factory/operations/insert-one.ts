@@ -36,7 +36,6 @@ function fieldsOfInput(type: TypeNode, schema: GraphQLSchema) {
   } = getNamedType(type)
   const gqlType = schema.getType(name)
   if (gqlType && ((process.env.NODE_ENV === 'production' && isInputObjectType(gqlType)) || gqlType.constructor.name === GraphQLInputObjectType.name)) {
-    console.dir(gqlType)
     const { astNode } = gqlType
     const { fields } = astNode as InputObjectTypeDefinitionNode
 
@@ -124,7 +123,6 @@ export function insertOne(
           insertedId,
           ops: [result]
         }) => {
-          console.log(result)
           const queries = toManys.map(({ key, value }) => {
             const [ { type } ] = variableDefinitions as VariableDefinitionNode[]
             const fields = fieldsOfInput(type, schema)
