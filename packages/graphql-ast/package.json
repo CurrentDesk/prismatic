@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/graphql-ast",
-  "version": "0.1.17-29",
+  "version": "0.1.17-30",
   "description": "Builders and helpers for GraphQL AST manipulation.",
   "author": "The Prismatize Team",
   "contributors": [
