@@ -1,12 +1,12 @@
 import { ObjectTypeDefinitionNode } from 'graphql/language'
 import { IResolverObject } from 'graphql-tools'
-import { tableize } from 'inflected'
+// import { tableize } from 'inflected'
 
 import {
   Maybe,
   ResolverFactory,
 } from '@currentdesk/prismatize'
-import { unwrap } from '@currentdesk/graphql-ast'
+// import { unwrap } from '@currentdesk/graphql-ast'
 
 import {
   insertOne,
@@ -24,31 +24,31 @@ export class MongoDBMutationResolverFactory extends ResolverFactory {
           name: {
             value: name,
           },
-          type,
+          // type,
         }
       ) => {
-        const { namedType } = unwrap(type)
-        const collection = tableize(namedType.name.value)
-        const match = name.match(/^([^A-Z]+(?:Many)?)/)
+        // const { namedType } = unwrap(type)
+        // const collection = tableize(namedType.name.value)
+        const match = name.match(/^([^A-Z]+(?:Many)?)(.+)$/)
 
         if (match) {
-          const [ action ] = match
-
+          const [ , action, typeName ] = match
+          console.log(action, typeName)
           switch (action) {
             case 'create': {
-              resolvers[name] = insertOne(namedType.name.value, this.relationshipManager)
+              resolvers[name] = insertOne(typeName, this.relationshipManager)
               break
             }
             case 'update': {
-              resolvers[name] = updateOne(collection)
+              resolvers[name] = updateOne(typeName)
               break
             }
             case 'delete': {
-              resolvers[name] = deleteOne(collection)
+              resolvers[name] = deleteOne(typeName)
               break
             }
             case 'createMany': {
-              resolvers[name] = insertMany(namedType.name.value, this.relationshipManager)
+              resolvers[name] = insertMany(typeName, this.relationshipManager)
               break
             }
             case 'updateMany': {

@@ -50,7 +50,7 @@ export function insertMany(
   const collectionName = getCollectionName(relatedModelName)
 
   return (
-    source,
+    _source,
     { data },
     { db },
     {
@@ -60,13 +60,15 @@ export function insertMany(
       },
     }: GraphQLResolveInfo
   ) => {
-    const relatives: {
+    const relationships: {
       toOnes: string[],
       toManys: { key: string, value: any }[]
     }[] = []
+    console.log('data:', data)
     data.forEach(item => {
       const toOnes: string[] = []
       const toManys: { key: string, value: any }[] = []
+      console.log('item:', item)
       Object.entries(item).forEach(([key, value]) => {
         if (value != null && (value.create != null || value.connect != null)) {
           if (is(Array, value)) {
@@ -81,111 +83,112 @@ export function insertMany(
           }
         }
       })
-      relatives.push({ toOnes, toManys })
+      relationships.push({ toOnes, toManys })
     })
 
     return db.then(db => {
-      relatives.forEach(item => {
-        const queries = item.toOnes.map(key => {
-          data.forEach(x => {
-            const value = x[key]
-            const [{ type }] = variableDefinitions as VariableDefinitionNode[]
-            const fields = fieldsOfInput(type, schema)
+      console.log('relatives:', relationships)
+      relationships.forEach(relationship => {
+        const queries = relationship.toOnes.map((key, i) => {
+          const value = data[i][key]
+          const [{ type }] = variableDefinitions as VariableDefinitionNode[]
+          const fields = fieldsOfInput(type, schema)
 
-            if (fields) {
-              const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
-              const { name: { value: name } } = getNamedType(type)
-              const [match] = name.match(/^[A-Z][a-z]+/) as string[]
-              const collection = db.collection(tableize(match))
+          if (fields) {
+            const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
+            const { name: { value: name } } = getNamedType(type)
+            const [match] = name.match(/^[A-Z][a-z]+/) as string[]
+            const collection = db.collection(tableize(match))
 
-              if ('create' in value) {
-                const { create } = value
+            if ('create' in value) {
+              const { create } = value
 
-                return collection.insertOne(mapWhere(create)).then(({ insertedId }) => {
-                  x[key] = insertedId
-                })
-              }
-
-              if ('connect' in value) {
-                const { connect } = value
-
-                return collection.findOne(mapWhere(connect)).then(({ _id }) => {
-                  x[key] = _id
-                })
-              }
-            } else {
-              throw new Error(`Schema is missing fields for ${relatedModelName}`)
-            }
-          })
-          return Promise.all(queries)
-            .then(() => {
-              const collection = db.collection(collectionName)
-
-              // data['createdAt'] = new Date(Date.now())
-              // data['updatedAt'] = new Date(Date.now())
-
-              data.forEach(x => {
-                data['createdAt'] = new Date(Date.now())
-                data['updatedAt'] = new Date(Date.now())
+              return collection.insertOne(mapWhere(create)).then(({ insertedId }) => {
+                data[i][key] = insertedId
               })
+            }
 
-              // console.log('data:', JSON.stringify(data, null, 2))
-              return collection.insertMany(data)
-                .then(({
-                  insertedIds,
-                  ops: [result]
-                }) => {
-                  Object.values(insertedIds).forEach((insertedId, index) => {
-                    console.log(result)
-                    const queries = relatives[index].toManys.map(({ key, value }) => {
-                      const [{ type }] = variableDefinitions as VariableDefinitionNode[]
-                      const fields = fieldsOfInput(type, schema)
+            if ('connect' in value) {
+              const { connect } = value
 
-                      if (fields) {
-                        const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
-                        const { name: { value: name } } = getNamedType(type)
-                        const [match] = name.match(/^[A-Z][a-z]+/) as string[]
-                        const collection = db.collection(tableize(match))
-
-                        if ('create' in value) {
-                          let { create } = value
-
-                          create = create.map(item => {
-                            Object.keys(item).forEach(related => {
-                              const relationship = relationshipManager.findRelationship(name, relatedModelName)
-
-                              if (relationship) {
-                                const { fieldName } = relationship
-
-                                item[related][fieldName] = insertedId
-                              }
-                            })
-                          })
-                            .map(mapWhere)
-
-                          return collection.insertMany(create).then(({ insertedIds, insertedCount }) => {
-                            data[key] = insertedId
-                          })
-                        }
-
-                        if ('connect' in value) {
-                          const { connect } = value
-
-                          return collection.findOne(connect.map(mapWhere)).then(({ _id }) => {
-                            data[key] = _id
-                          })
-                        }
-                      } else {
-                        throw new Error(`Schema is missing fields for ${relatedModelName}`)
-                      }
-                    })
-
-                    return Promise.all(queries).then(() => result)
-                  })
-                })
-                .catch(console.log)
-            })
+              return collection.findOne(mapWhere(connect)).then(({ _id }) => {
+                data[i][key] = _id
+              })
+            }
+          } else {
+            throw new Error(`Schema is missing fields for ${relatedModelName}`)
+          }
         })
+        console.log('queries:', queries)
+        return Promise.all(queries)
+          .then(() => {
+            const collection = db.collection(collectionName)
+
+            // data['createdAt'] = new Date(Date.now())
+            // data['updatedAt'] = new Date(Date.now())
+
+            data.forEach(x => {
+              data['createdAt'] = new Date(Date.now())
+              data['updatedAt'] = new Date(Date.now())
+            })
+
+            // console.log('data:', JSON.stringify(data, null, 2))
+            return collection.insertMany(data)
+              .then(({
+                insertedIds,
+                ops: [result]
+              }) => {
+                console.log('InsertedIds:', insertedIds)
+                Object.values(insertedIds).forEach((insertedId, index) => {
+                  console.log(result)
+                  const queries = relationships[index].toManys.map(({ key, value }) => {
+                    const [{ type }] = variableDefinitions as VariableDefinitionNode[]
+                    const fields = fieldsOfInput(type, schema)
+
+                    if (fields) {
+                      const { type } = fields.find(field => field.name.value === key) as InputValueDefinitionNode
+                      const { name: { value: name } } = getNamedType(type)
+                      const [match] = name.match(/^[A-Z][a-z]+/) as string[]
+                      const collection = db.collection(tableize(match))
+
+                      if ('create' in value) {
+                        let { create } = value
+
+                        create = create.map(item => {
+                          Object.keys(item).forEach(related => {
+                            const relationship = relationshipManager.findRelationship(name, relatedModelName)
+
+                            if (relationship) {
+                              const { fieldName } = relationship
+
+                              item[related][fieldName] = insertedId
+                            }
+                          })
+                        })
+                          .map(mapWhere)
+
+                        return collection.insertMany(create).then(({ insertedIds, insertedCount }) => {
+                          data[key] = insertedId
+                        })
+                      }
+
+                      if ('connect' in value) {
+                        const { connect } = value
+
+                        return collection.findOne(connect.map(mapWhere)).then(({ _id }) => {
+                          data[key] = _id
+                        })
+                      }
+                    } else {
+                      throw new Error(`Schema is missing fields for ${relatedModelName}`)
+                    }
+                  })
+
+                  return Promise.all(queries).then(() => result)
+                })
+              })
+              .catch(console.log)
+          })
       })
     })
   }
