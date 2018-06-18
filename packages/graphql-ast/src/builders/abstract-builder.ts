@@ -1,11 +1,12 @@
 export type Mutator<T> = (items: T[]) => T[]
 
 export type Buildable<T extends { [x: string]: any }, K extends string> = {
-    [P in K]: T[P];
+  [P in K]: T[P]
 }
 
 export interface Node {
   kind: string
+  [key: string]: any
 }
 
 export abstract class Builder<T extends Node> {
