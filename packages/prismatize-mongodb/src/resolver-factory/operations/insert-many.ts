@@ -68,7 +68,6 @@ export function insertMany(
     data.forEach(item => {
       const toOnes: string[] = []
       const toManys: { key: string, value: any }[] = []
-      console.log('item:', item)
       Object.entries(item).forEach(([key, value]) => {
         if (value != null && (value.create != null || value.connect != null)) {
           if (is(Array, value)) {
@@ -87,7 +86,6 @@ export function insertMany(
     })
 
     return db.then(db => {
-      console.log('relatives:', relationships)
       relationships.forEach(relationship => {
         const queries = relationship.toOnes.map((key, i) => {
           const value = data[i][key]
@@ -119,7 +117,6 @@ export function insertMany(
             throw new Error(`Schema is missing fields for ${relatedModelName}`)
           }
         })
-        console.log('queries:', queries)
         return Promise.all(queries)
           .then(() => {
             const collection = db.collection(collectionName)
@@ -138,7 +135,6 @@ export function insertMany(
                 insertedIds,
                 ops: [result]
               }) => {
-                console.log('InsertedIds:', insertedIds)
                 Object.values(insertedIds).forEach((insertedId, index) => {
                   console.log(result)
                   const queries = relationships[index].toManys.map(({ key, value }) => {

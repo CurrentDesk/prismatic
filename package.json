@@ -7,7 +7,8 @@
     "clean": "lerna run --stream clean",
     "build": "lerna run --stream build",
     "watch": "lerna run --parallel build:watch",
-    "deploy": "lerna publish"
+    "deploy": "lerna publish",
+    "deploy:dev": "lerna publish --npm-tag=dev"
   },
   "devDependencies": {
     "lerna": "^2.10.2"
@@ -15,7 +16,7 @@
   "resolutions": {
     "@types/graphql": "0.13.1",
     "graphql": "0.13.2",
-    "mongodb": "3.1.0-beta4",
+		"mongodb": "3.1.0-beta4",
     "typescript": "2.8.3"
   }
 }
