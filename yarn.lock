@@ -35,8 +35,8 @@
     "@types/node" "*"
 
 "@types/bson@*":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@types/bson/-/bson-1.0.8.tgz#6ad272b3f049e9598ec33aed09cf56d8946b75f1"
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/bson/-/bson-1.0.9.tgz#0a042ac50d879c4a842a269586162e12010f6ebd"
   dependencies:
     "@types/node" "*"
 
@@ -93,20 +93,24 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
 
 "@types/mongodb@^3.0.5":
-  version "3.0.20"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.0.20.tgz#08c9d82a8bdb00f9fb91bd0f56da5a8d68f78f36"
+  version "3.0.21"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.0.21.tgz#f2a7838d2870ed1e9cf0eb9933c786a23e6b7a68"
   dependencies:
     "@types/bson" "*"
     "@types/events" "*"
     "@types/node" "*"
 
 "@types/node@*":
-  version "10.3.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.3.tgz#8798d9e39af2fa604f715ee6a6b19796528e46c3"
+  version "10.3.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.4.tgz#c74e8aec19e555df44609b8057311052a2c84d9e"
 
 "@types/node@^9.4.0", "@types/node@^9.4.6":
   version "9.6.22"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.22.tgz#05b55093faaadedea7a4b3f76e9a61346a6dd209"
+
+"@types/ramda@^0.25.33":
+  version "0.25.33"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.33.tgz#a134fde6da3be303a1bdefd9155d8365bb7b14ec"
 
 "@types/range-parser@*":
   version "1.2.2"
@@ -283,8 +287,8 @@ apollo-upload-server@^5.0.0:
     object-path "^0.11.4"
 
 apollo-utilities@^1.0.0, apollo-utilities@^1.0.1:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.15.tgz#8f1ba6e4ed9b92cb0de2ce7c032315a768860aae"
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.16.tgz#787310df4c3900a68c0beb3d351c59725a588cdb"
   dependencies:
     fast-json-stable-stringify "^2.0.0"
 
@@ -717,8 +721,8 @@ browser-process-hrtime@^0.1.2:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-0.1.2.tgz#425d68a58d3447f02a04aa894187fce8af8b7b8e"
 
 browser-resolve@^1.11.2:
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/browser-resolve/-/browser-resolve-1.11.2.tgz#8ff09b0a2c421718a1051c260b32e48f442938ce"
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/browser-resolve/-/browser-resolve-1.11.3.tgz#9b7cbb3d0f510e4cb86bdbd796124d28b5890af6"
   dependencies:
     resolve "1.1.7"
 
@@ -1448,8 +1452,8 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
 
 error-ex@^1.2.0, error-ex@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/error-ex/-/error-ex-1.3.1.tgz#f855a86ce61adc4e8621c3cda21e7a7612c3a8dc"
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/error-ex/-/error-ex-1.3.2.tgz#b4ac40648107fdcdcfae242f428bea8a14d4f1bf"
   dependencies:
     is-arrayish "^0.2.1"
 
@@ -2027,9 +2031,9 @@ graphql-import@^0.6.0:
   dependencies:
     lodash "^4.17.4"
 
-graphql-middleware@1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-1.2.5.tgz#f68c0c399cf573a6334d1d9e04cddfec038ffd4a"
+graphql-middleware@1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-1.3.1.tgz#a5a17a2c28e24fbbf67873595ad2bec4f9a3f2e3"
   dependencies:
     graphql-tools "^3.0.2"
 
@@ -2084,8 +2088,8 @@ graphql-tools@^3.0.1, graphql-tools@^3.0.2:
     uuid "^3.1.0"
 
 graphql-yoga@^1.4.3:
-  version "1.14.8"
-  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-1.14.8.tgz#0ef9630e309c05014ee6d2afcdfe889e7edea9f6"
+  version "1.14.10"
+  resolved "https://registry.yarnpkg.com/graphql-yoga/-/graphql-yoga-1.14.10.tgz#cf88863fb15aa30fda06d906e9b4490307e94d60"
   dependencies:
     "@types/cors" "^2.8.4"
     "@types/express" "^4.11.1"
@@ -2102,7 +2106,7 @@ graphql-yoga@^1.4.3:
     graphql "^0.11.0 || ^0.12.0 || ^0.13.0"
     graphql-deduplicator "^2.0.1"
     graphql-import "^0.6.0"
-    graphql-middleware "1.2.5"
+    graphql-middleware "1.3.1"
     graphql-playground-middleware-express "1.6.3"
     graphql-playground-middleware-lambda "1.6.1"
     graphql-subscriptions "^0.5.8"
@@ -3585,8 +3589,8 @@ object-copy@^0.1.0:
     kind-of "^3.0.3"
 
 object-keys@^1.0.8:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.12.tgz#09c53855377575310cca62f55bb334abff7b3ed2"
 
 object-path@^0.11.4:
   version "0.11.4"
@@ -4900,8 +4904,8 @@ union-value@^1.0.0:
     set-value "^0.4.3"
 
 universalify@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.1.tgz#fa71badd4437af4c148841e3b3b165f9e9e590b7"
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

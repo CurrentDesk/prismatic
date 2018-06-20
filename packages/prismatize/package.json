@@ -1,6 +1,6 @@
 {
   "name": "@currentdesk/prismatize",
-  "version": "0.1.17-dev.32",
+  "version": "0.1.17-dev.33",
   "description": "A node library that converts your database into a GraphQL API like Prisma.",
   "author": "The Prismatize Team",
   "contributors": [
@@ -33,7 +33,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@currentdesk/graphql-ast": "^0.1.17-dev.32",
+    "@currentdesk/graphql-ast": "^0.1.17-dev.33",
     "@okgrow/graphql-scalars": "^0.4.0",
     "graphql": "^0.13.2",
     "graphql-import": "^0.5.0",
@@ -49,6 +49,7 @@
     "@types/jest": "^22.2.3",
     "@types/mongodb": "^3.0.5",
     "@types/node": "^9.4.0",
+    "@types/ramda": "^0.25.33",
     "@types/yargs": "^10.0.1",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.3",

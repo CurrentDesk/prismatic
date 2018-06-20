@@ -114,29 +114,25 @@ export class MongoDBInputBuilder extends InputBuilder {
   }
 
   public buildCreateRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode> {
-    if (this.relationshipManager.hasReverseRelationship(relationship)) {
-      return new InputObjectTypeDefinition()
-      .name(this.namer.buildCreateRelationalName(relationship))
-      .fields(() => rejectNil([
-        this.fieldBuilder.buildCreateRelationalInputField(relationship),
-        this.fieldBuilder.buildConnectRelationalInputField(relationship),
-      ]))
-      .node()
-    }
+    return new InputObjectTypeDefinition()
+    .name(this.namer.buildCreateRelationalName(relationship))
+    .fields(() => rejectNil([
+      this.fieldBuilder.buildCreateRelationalInputField(relationship),
+      this.fieldBuilder.buildConnectRelationalInputField(relationship),
+    ]))
+    .node()
   }
 
   public buildUpdateRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode> {
-    if (this.relationshipManager.hasReverseRelationship(relationship)) {
-      return new InputObjectTypeDefinition()
-      .name(this.namer.buildUpdateRelationalName(relationship))
-      .fields(() => rejectNil([
-        this.fieldBuilder.buildCreateRelationalInputField(relationship),
-        this.fieldBuilder.buildConnectRelationalInputField(relationship),
-        this.fieldBuilder.buildDisconnectRelationalInputField(relationship),
-        this.fieldBuilder.buildDeleteRelationalInputField(relationship),
-      ]))
-      .node()
-    }
+    return new InputObjectTypeDefinition()
+    .name(this.namer.buildUpdateRelationalName(relationship))
+    .fields(() => rejectNil([
+      this.fieldBuilder.buildCreateRelationalInputField(relationship),
+      this.fieldBuilder.buildConnectRelationalInputField(relationship),
+      this.fieldBuilder.buildDisconnectRelationalInputField(relationship),
+      this.fieldBuilder.buildDeleteRelationalInputField(relationship),
+    ]))
+    .node()
   }
 
   public buildCreatePostRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode> {
