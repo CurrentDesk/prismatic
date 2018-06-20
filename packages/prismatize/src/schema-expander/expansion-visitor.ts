@@ -42,12 +42,12 @@ const definitionOrder = [
 type Builder<I, T> = (item: I) => Maybe<T>
 type BuildAll<I, T> = (items: I[]) => T[]
 
-const chainBuilders = <I, T>(builders: Builder<I, T>[]): BuildAll<I, T> => pipe(ap(builders), reject(isNil))
+const chainBuilders = <I, T>(builders: Builder<I, T>[]): BuildAll<I, T> => pipe<ReadonlyArray<I>, ReadonlyArray<Maybe<T>>, T[]>(ap(builders), reject<T>(isNil))
 
 export class ExpansionVisitor {
   public Document: any = {}
 
-  private models: Array<ObjectTypeDefinitionNode>
+  private models: ObjectTypeDefinitionNode[]
 
   public constructor(
     private argumentsBuilder: ArgumentsBuilder,
@@ -83,7 +83,7 @@ export class ExpansionVisitor {
 
     return new Document(node)
     .definitions(definitions =>
-      sortWith(
+      sortWith<DefinitionNode>(
         [
           ascend(pipe(prop('kind'), kind => definitionOrder.indexOf(kind))),
           ascend(pipe(path(['name', 'value']), toLower))

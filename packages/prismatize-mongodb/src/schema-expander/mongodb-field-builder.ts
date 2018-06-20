@@ -415,10 +415,7 @@ export class MongoDBFieldBuilder extends FieldBuilder {
             )
           }
 
-          const relationship =
-            this.relationshipManager.findRelationship(namedTypeName, modelName)
-            ||
-            this.relationshipManager.findRelationship(modelName, namedTypeName)
+          const relationship = this.relationshipManager.findRelationship(modelName, namedTypeName)
           const namedTypeNode = NamedType.node(
             relationship
             ?

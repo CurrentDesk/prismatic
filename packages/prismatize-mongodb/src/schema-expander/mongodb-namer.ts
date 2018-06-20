@@ -54,13 +54,13 @@ export class MongoDBNamer extends Namer {
     }: Relationship,
     action: string
   ): string {
-    const builder = [modelName, action]
+    const builder = [relatedModelName, action]
 
-    builder.push(this.relationshipManager.isToManyRelationship(relatedModelName, modelName) ? 'Many' : 'One')
+    builder.push(toMany ? 'Many' : 'One')
 
     if (this.relationshipManager.hasRelationship(relatedModelName, modelName)) {
       builder.push('Without')
-      builder.push(toMany ? pluralize(relatedModelName) : relatedModelName)
+      builder.push(this.relationshipManager.isToManyRelationship(relatedModelName, modelName) ? pluralize(modelName) : modelName)
     }
 
     builder.push('Input')
