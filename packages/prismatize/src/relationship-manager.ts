@@ -11,6 +11,7 @@ import { typeFromAST } from 'graphql/utilities'
 import {
   getNamedType,
   isWrappingType,
+  hasDirective,
 } from '@currentdesk/graphql-ast'
 
 import { Maybe } from './maybe'
@@ -75,6 +76,7 @@ export class RelationshipManager {
         value: modelName,
       },
       fields,
+      directives: modelDirectives,
     }: ObjectTypeDefinitionNode,
   ) {
     (fields || []).forEach((
@@ -83,9 +85,10 @@ export class RelationshipManager {
           value: fieldName,
         },
         type,
+        directives: fieldDirectives
       },
     ) => {
-      if (this.isRelation(type)) {
+      if (!(hasDirective(modelDirectives, 'embedded') || hasDirective(fieldDirectives, 'embedded')) && this.isRelation(type)) {
         this.relationships.push(getRelationship(type, { fieldName, modelName }))
       }
     })

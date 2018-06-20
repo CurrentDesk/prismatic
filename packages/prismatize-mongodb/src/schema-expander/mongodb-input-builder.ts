@@ -136,29 +136,25 @@ export class MongoDBInputBuilder extends InputBuilder {
   }
 
   public buildCreatePostRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode> {
-    if (this.relationshipManager.hasReverseRelationship(relationship)) {
-      const {
-        modelName,
-        relatedModelName,
-      } = relationship
+    const {
+      modelName,
+      relatedModelName,
+    } = relationship
 
-      return new InputObjectTypeDefinition()
-      .name(this.namer.buildCreateInputName(modelName, relatedModelName))
-      .fields(() => this.fieldBuilder.buildCreatePostRelationalInputFields(relationship))
-      .node()
-    }
+    return new InputObjectTypeDefinition()
+    .name(this.namer.buildCreateInputName(modelName, relatedModelName))
+    .fields(() => this.fieldBuilder.buildCreatePostRelationalInputFields(relationship))
+    .node()
   }
 
   public buildUpdatePostRelationalInput(relationship: Relationship): Maybe<InputObjectTypeDefinitionNode> {
-    if (this.relationshipManager.hasReverseRelationship(relationship)) {
-      const {
-        modelName,
-        relatedModelName,
-      } = relationship
+    const {
+      modelName,
+      relatedModelName,
+    } = relationship
 
-      return new InputObjectTypeDefinition()
-      .name(this.namer.buildUpdateInputName(modelName, relatedModelName))
-      .node()
-    }
+    return new InputObjectTypeDefinition()
+    .name(this.namer.buildUpdateInputName(modelName, relatedModelName))
+    .node()
   }
 }
