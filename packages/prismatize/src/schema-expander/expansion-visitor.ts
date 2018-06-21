@@ -35,6 +35,7 @@ import { InputBuilder } from './input-builder'
 const definitionOrder = [
   'ScalarTypeDefinition',
   'DirectiveDefinition',
+  'EnumTypeDefinition',
   'InterfaceTypeDefinition',
   'ObjectTypeDefinition',
 ]
